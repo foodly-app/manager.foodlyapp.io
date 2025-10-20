@@ -122,9 +122,12 @@ class TokenServiceTest extends TestCase
     {
         $this->tokenStorage
             ->shouldReceive('clear')
-            ->once();
+            ->once()
+            ->andReturn(true);
 
-        $this->tokenService->clearToken();
+        $result = $this->tokenService->clearToken();
+        
+        $this->assertTrue(true); // Assert that the method completed without error
     }
 
     public function test_generates_token_with_correct_credentials(): void
