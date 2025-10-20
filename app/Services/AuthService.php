@@ -34,6 +34,17 @@ class AuthService
     }
 
     /**
+     * Get initial dashboard data after login
+     *
+     * @return array
+     * @throws Exception
+     */
+    public function initialDashboard(): array
+    {
+        return $this->client->get('/partner/initial-dashboard');
+    }
+
+    /**
      * Logout user and invalidate token
      *
      * @return array
@@ -43,4 +54,64 @@ class AuthService
     {
         return $this->client->post('/partner/logout');
     }
-}
+
+    /**
+     * Get user profile
+     *
+     * @return array
+     * @throws Exception
+     */
+    public function getProfile(): array
+    {
+        return $this->client->get('/partner/profile');
+    }
+
+    /**
+     * Update user profile
+     *
+     * @param array $data
+     * @return array
+     * @throws Exception
+     */
+    public function updateProfile(array $data): array
+    {
+        return $this->client->put('/partner/profile', $data);
+    }
+
+    /**
+     * Upload user avatar
+     *
+     * @param mixed $avatar
+     * @return array
+     * @throws Exception
+     */
+    public function uploadAvatar($avatar): array
+    {
+        return $this->client->post('/partner/profile/avatar', [
+            'avatar' => $avatar
+        ]);
+    }
+
+    /**
+     * Delete user avatar
+     *
+     * @return array
+     * @throws Exception
+     */
+    public function deleteAvatar(): array
+    {
+        return $this->client->delete('/partner/profile/avatar');
+    }
+
+    /**
+     * Change user password
+     *
+     * @param array $data
+     * @return array
+     * @throws Exception
+     */
+    public function changePassword(array $data): array
+    {
+        return $this->client->put('/partner/profile/password', $data);
+    }
+} 

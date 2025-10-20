@@ -11,114 +11,223 @@ class ReservationService
     ) {}
 
     /**
-     * Get list of reservations for a restaurant
+     * Get list of all reservations
      *
-     * @param int $restaurantId
      * @param array $query
      * @return array
      * @throws Exception
      */
-    public function list(int $restaurantId, array $query = []): array
+    public function list(array $query = []): array
     {
-        return $this->client->get("/partner/restaurants/{$restaurantId}/reservations", $query);
+        return $this->client->get('/partner/reservations', $query);
+    }
+
+    /**
+     * Get calendar view of reservations
+     *
+     * @param array $query
+     * @return array
+     * @throws Exception
+     */
+    public function calendar(array $query = []): array
+    {
+        return $this->client->get('/partner/reservations/calendar', $query);
     }
 
     /**
      * Get reservation by ID
      *
+     * @param int $organizationId
      * @param int $restaurantId
      * @param int $id
      * @return array
      * @throws Exception
      */
-    public function get(int $restaurantId, int $id): array
+    public function get(int $organizationId, int $restaurantId, int $id): array
     {
-        return $this->client->get("/partner/restaurants/{$restaurantId}/reservations/{$id}");
+        return $this->client->get("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}");
+    }
+
+    /**
+     * Create reservation
+     *
+     * @param int $organizationId
+     * @param int $restaurantId
+     * @param array $data
+     * @return array
+     * @throws Exception
+     */
+    public function create(int $organizationId, int $restaurantId, array $data): array
+    {
+        return $this->client->post("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations", $data);
+    }
+
+    /**
+     * Update reservation details
+     *
+     * @param int $organizationId
+     * @param int $restaurantId
+     * @param int $id
+     * @param array $data
+     * @return array
+     * @throws Exception
+     */
+    public function update(int $organizationId, int $restaurantId, int $id, array $data): array
+    {
+        return $this->client->put("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}", $data);
     }
 
     /**
      * Update reservation status
      *
+     * @param int $organizationId
      * @param int $restaurantId
      * @param int $id
-     * @param string $status
+     * @param array $data
      * @return array
      * @throws Exception
      */
-    public function updateStatus(int $restaurantId, int $id, string $status): array
+    public function updateStatus(int $organizationId, int $restaurantId, int $id, array $data): array
     {
-        return $this->client->put("/partner/restaurants/{$restaurantId}/reservations/{$id}/status", [
-            'status' => $status
-        ]);
+        return $this->client->put("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/status", $data);
     }
 
     /**
-     * Add notes to reservation
+     * Confirm reservation
      *
+     * @param int $organizationId
      * @param int $restaurantId
      * @param int $id
-     * @param string $notes
      * @return array
      * @throws Exception
      */
-    public function addNotes(int $restaurantId, int $id, string $notes): array
+    public function confirm(int $organizationId, int $restaurantId, int $id): array
     {
-        return $this->client->post("/partner/restaurants/{$restaurantId}/reservations/{$id}/notes", [
-            'notes' => $notes
-        ]);
+        return $this->client->put("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/confirm");
     }
 
     /**
-     * Get reservation statistics for a restaurant
+     * Cancel reservation
      *
+     * @param int $organizationId
      * @param int $restaurantId
-     * @param array $query Filter parameters (e.g. date range)
+     * @param int $id
+     * @param array $data
      * @return array
      * @throws Exception
      */
-    public function getStatistics(int $restaurantId, array $query = []): array
+    public function cancel(int $organizationId, int $restaurantId, int $id, array $data = []): array
     {
-        return $this->client->get("/partner/restaurants/{$restaurantId}/reservations/statistics", $query);
+        return $this->client->put("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/cancel", $data);
     }
 
     /**
-     * Get today's reservations
+     * Mark reservation as paid
      *
+     * @param int $organizationId
      * @param int $restaurantId
+     * @param int $id
      * @return array
      * @throws Exception
      */
-    public function getToday(int $restaurantId): array
+    public function markAsPaid(int $organizationId, int $restaurantId, int $id): array
     {
-        return $this->client->get("/partner/restaurants/{$restaurantId}/reservations/today");
+        return $this->client->put("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/paid");
     }
 
     /**
-     * Get upcoming reservations
+     * Complete reservation
      *
+     * @param int $organizationId
      * @param int $restaurantId
+     * @param int $id
+     * @return array
+     * @throws Exception
+     */
+    public function complete(int $organizationId, int $restaurantId, int $id): array
+    {
+        return $this->client->put("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/complete");
+    }
+
+    /**
+     * Mark reservation as no-show
+     *
+     * @param int $organizationId
+     * @param int $restaurantId
+     * @param int $id
+     * @return array
+     * @throws Exception
+     */
+    public function noShow(int $organizationId, int $restaurantId, int $id): array
+    {
+        return $this->client->put("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/no-show");
+    }
+
+    /**
+     * Assign table to reservation
+     *
+     * @param int $organizationId
+     * @param int $restaurantId
+     * @param int $id
+     * @param array $data
+     * @return array
+     * @throws Exception
+     */
+    public function assignTable(int $organizationId, int $restaurantId, int $id, array $data): array
+    {
+        return $this->client->put("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/assign-table", $data);
+    }
+
+    /**
+     * Get reservation statistics
+     *
      * @param array $query
      * @return array
      * @throws Exception
      */
-    public function getUpcoming(int $restaurantId, array $query = []): array
+    public function statistics(array $query = []): array
     {
-        return $this->client->get("/partner/restaurants/{$restaurantId}/reservations/upcoming", $query);
+        return $this->client->get('/partner/reservations/statistics', $query);
     }
 
     /**
-     * Cancel a reservation
+     * Search reservations
      *
-     * @param int $restaurantId
-     * @param int $id
-     * @param string $reason
+     * @param array $query
      * @return array
      * @throws Exception
      */
-    public function cancel(int $restaurantId, int $id, string $reason): array
+    public function search(array $query = []): array
     {
-        return $this->client->post("/partner/restaurants/{$restaurantId}/reservations/{$id}/cancel", [
-            'reason' => $reason
-        ]);
+        return $this->client->get('/partner/reservations/search', $query);
+    }
+
+    /**
+     * Add note to reservation
+     *
+     * @param int $organizationId
+     * @param int $restaurantId
+     * @param int $id
+     * @param array $data
+     * @return array
+     * @throws Exception
+     */
+    public function addNote(int $organizationId, int $restaurantId, int $id, array $data): array
+    {
+        return $this->client->post("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/notes", $data);
+    }
+
+    /**
+     * Delete reservation
+     *
+     * @param int $organizationId
+     * @param int $restaurantId
+     * @param int $id
+     * @return array
+     * @throws Exception
+     */
+    public function delete(int $organizationId, int $restaurantId, int $id): array
+    {
+        return $this->client->delete("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}");
     }
 }
