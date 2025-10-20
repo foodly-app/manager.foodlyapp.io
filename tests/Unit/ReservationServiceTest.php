@@ -4,23 +4,29 @@ namespace Tests\Unit;
 
 use App\Services\HttpClient;
 use App\Services\ReservationService;
+use Mockery;
 use Tests\TestCase;
 
 class ReservationServiceTest extends TestCase
 {
     private ReservationService $reservationService;
-    private HttpClient $httpClient;
+    private $httpClient;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->httpClient = $this->mock(HttpClient::class);
+        $this->httpClient = Mockery::mock(HttpClient::class);
         $this->reservationService = new ReservationService($this->httpClient);
+    }
+    
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
     }
 
     public function test_list_reservations(): void
     {
-        $restaurantId = 1;
         $query = ['date' => '2025-10-20'];
         $expectedResponse = [
             'data' => [
@@ -32,16 +38,17 @@ class ReservationServiceTest extends TestCase
         $this->httpClient
             ->shouldReceive('get')
             ->once()
-            ->with("/partner/restaurants/{$restaurantId}/reservations", $query)
+            ->with("/partner/reservations", $query)
             ->andReturn($expectedResponse);
 
-        $result = $this->reservationService->list($restaurantId, $query);
+        $result = $this->reservationService->list($query);
 
         $this->assertEquals($expectedResponse, $result);
     }
 
     public function test_get_reservation_by_id(): void
     {
+        $organizationId = 1;
         $restaurantId = 1;
         $reservationId = 10;
         $expectedResponse = [
@@ -53,10 +60,10 @@ class ReservationServiceTest extends TestCase
         $this->httpClient
             ->shouldReceive('get')
             ->once()
-            ->with("/partner/restaurants/{$restaurantId}/reservations/{$reservationId}")
+            ->with("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$reservationId}")
             ->andReturn($expectedResponse);
 
-        $result = $this->reservationService->get($restaurantId, $reservationId);
+        $result = $this->reservationService->get($organizationId, $restaurantId, $reservationId);
 
         $this->assertEquals($expectedResponse, $result);
         $this->assertEquals($reservationId, $result['id']);
@@ -64,9 +71,10 @@ class ReservationServiceTest extends TestCase
 
     public function test_update_reservation_status(): void
     {
+        $organizationId = 1;
         $restaurantId = 1;
         $reservationId = 10;
-        $status = 'confirmed';
+        $status = ['status' => 'confirmed'];
         $expectedResponse = [
             'id' => 10,
             'status' => 'confirmed',
@@ -77,44 +85,44 @@ class ReservationServiceTest extends TestCase
             ->shouldReceive('put')
             ->once()
             ->with(
-                "/partner/restaurants/{$restaurantId}/reservations/{$reservationId}/status",
-                ['status' => $status]
+                "/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$reservationId}/status",
+                $status
             )
             ->andReturn($expectedResponse);
 
-        $result = $this->reservationService->updateStatus($restaurantId, $reservationId, $status);
+        $result = $this->reservationService->updateStatus($organizationId, $restaurantId, $reservationId, $status);
 
         $this->assertEquals($expectedResponse, $result);
-        $this->assertEquals($status, $result['status']);
+        $this->assertEquals('confirmed', $result['status']);
     }
 
-    public function test_add_notes_to_reservation(): void
+    public function test_add_note_to_reservation(): void
     {
+        $organizationId = 1;
         $restaurantId = 1;
         $reservationId = 10;
-        $notes = 'Customer requested window seat';
+        $noteData = ['note' => 'Customer requested window seat'];
         $expectedResponse = [
             'id' => 10,
-            'notes' => $notes
+            'note' => 'Customer requested window seat'
         ];
 
         $this->httpClient
             ->shouldReceive('post')
             ->once()
             ->with(
-                "/partner/restaurants/{$restaurantId}/reservations/{$reservationId}/notes",
-                ['notes' => $notes]
+                "/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$reservationId}/notes",
+                $noteData
             )
             ->andReturn($expectedResponse);
 
-        $result = $this->reservationService->addNotes($restaurantId, $reservationId, $notes);
+        $result = $this->reservationService->addNote($organizationId, $restaurantId, $reservationId, $noteData);
 
         $this->assertEquals($expectedResponse, $result);
     }
 
     public function test_get_reservation_statistics(): void
     {
-        $restaurantId = 1;
         $query = ['start_date' => '2025-10-01', 'end_date' => '2025-10-31'];
         $expectedResponse = [
             'total' => 100,
@@ -126,79 +134,37 @@ class ReservationServiceTest extends TestCase
         $this->httpClient
             ->shouldReceive('get')
             ->once()
-            ->with("/partner/restaurants/{$restaurantId}/reservations/statistics", $query)
+            ->with("/partner/reservations/statistics", $query)
             ->andReturn($expectedResponse);
 
-        $result = $this->reservationService->getStatistics($restaurantId, $query);
+        $result = $this->reservationService->statistics($query);
 
         $this->assertEquals($expectedResponse, $result);
         $this->assertArrayHasKey('total', $result);
     }
 
-    public function test_get_today_reservations(): void
-    {
-        $restaurantId = 1;
-        $expectedResponse = [
-            'data' => [
-                ['id' => 1, 'time' => '12:00', 'customer_name' => 'John Doe'],
-                ['id' => 2, 'time' => '14:00', 'customer_name' => 'Jane Smith'],
-            ]
-        ];
-
-        $this->httpClient
-            ->shouldReceive('get')
-            ->once()
-            ->with("/partner/restaurants/{$restaurantId}/reservations/today")
-            ->andReturn($expectedResponse);
-
-        $result = $this->reservationService->getToday($restaurantId);
-
-        $this->assertEquals($expectedResponse, $result);
-    }
-
-    public function test_get_upcoming_reservations(): void
-    {
-        $restaurantId = 1;
-        $query = ['days' => 7];
-        $expectedResponse = [
-            'data' => [
-                ['id' => 1, 'date' => '2025-10-21', 'customer_name' => 'John Doe'],
-                ['id' => 2, 'date' => '2025-10-22', 'customer_name' => 'Jane Smith'],
-            ]
-        ];
-
-        $this->httpClient
-            ->shouldReceive('get')
-            ->once()
-            ->with("/partner/restaurants/{$restaurantId}/reservations/upcoming", $query)
-            ->andReturn($expectedResponse);
-
-        $result = $this->reservationService->getUpcoming($restaurantId, $query);
-
-        $this->assertEquals($expectedResponse, $result);
-    }
-
     public function test_cancel_reservation(): void
     {
+        $organizationId = 1;
         $restaurantId = 1;
         $reservationId = 10;
-        $reason = 'Customer requested cancellation';
+        $cancelData = ['reason' => 'Customer requested cancellation'];
         $expectedResponse = [
             'id' => 10,
             'status' => 'cancelled',
-            'cancellation_reason' => $reason
+            'cancellation_reason' => 'Customer requested cancellation'
         ];
 
         $this->httpClient
-            ->shouldReceive('post')
+            ->shouldReceive('put')
             ->once()
             ->with(
-                "/partner/restaurants/{$restaurantId}/reservations/{$reservationId}/cancel",
-                ['reason' => $reason]
+                "/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$reservationId}/cancel",
+                $cancelData
             )
             ->andReturn($expectedResponse);
 
-        $result = $this->reservationService->cancel($restaurantId, $reservationId, $reason);
+        $result = $this->reservationService->cancel($organizationId, $restaurantId, $reservationId, $cancelData);
 
         $this->assertEquals($expectedResponse, $result);
         $this->assertEquals('cancelled', $result['status']);
@@ -206,18 +172,19 @@ class ReservationServiceTest extends TestCase
 
     public function test_throws_exception_when_reservation_not_found(): void
     {
+        $organizationId = 1;
         $restaurantId = 1;
         $reservationId = 999;
 
         $this->httpClient
             ->shouldReceive('get')
             ->once()
-            ->with("/partner/restaurants/{$restaurantId}/reservations/{$reservationId}")
+            ->with("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$reservationId}")
             ->andThrow(new \Exception('Not Found: Reservation not found'));
 
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Not Found');
 
-        $this->reservationService->get($restaurantId, $reservationId);
+        $this->reservationService->get($organizationId, $restaurantId, $reservationId);
     }
 }

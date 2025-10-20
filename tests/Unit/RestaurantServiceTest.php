@@ -4,18 +4,25 @@ namespace Tests\Unit;
 
 use App\Services\HttpClient;
 use App\Services\RestaurantService;
+use Mockery;
 use Tests\TestCase;
 
 class RestaurantServiceTest extends TestCase
 {
     private RestaurantService $restaurantService;
-    private HttpClient $httpClient;
+    private $httpClient;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->httpClient = $this->mock(HttpClient::class);
+        $this->httpClient = Mockery::mock(HttpClient::class);
         $this->restaurantService = new RestaurantService($this->httpClient);
+    }
+    
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
     }
 
     public function test_list_restaurants(): void
@@ -41,6 +48,7 @@ class RestaurantServiceTest extends TestCase
 
     public function test_get_restaurant_by_id(): void
     {
+        $organizationId = 1;
         $restaurantId = 1;
         $expectedResponse = [
             'id' => 1,
@@ -51,10 +59,10 @@ class RestaurantServiceTest extends TestCase
         $this->httpClient
             ->shouldReceive('get')
             ->once()
-            ->with("/partner/restaurants/{$restaurantId}")
+            ->with("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}")
             ->andReturn($expectedResponse);
 
-        $result = $this->restaurantService->get($restaurantId);
+        $result = $this->restaurantService->get($organizationId, $restaurantId);
 
         $this->assertEquals($expectedResponse, $result);
         $this->assertEquals($restaurantId, $result['id']);
@@ -62,6 +70,7 @@ class RestaurantServiceTest extends TestCase
 
     public function test_update_restaurant(): void
     {
+        $organizationId = 1;
         $restaurantId = 1;
         $updateData = [
             'name' => 'Updated Restaurant',
@@ -76,16 +85,17 @@ class RestaurantServiceTest extends TestCase
         $this->httpClient
             ->shouldReceive('put')
             ->once()
-            ->with("/partner/restaurants/{$restaurantId}", $updateData)
+            ->with("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}", $updateData)
             ->andReturn($expectedResponse);
 
-        $result = $this->restaurantService->update($restaurantId, $updateData);
+        $result = $this->restaurantService->update($organizationId, $restaurantId, $updateData);
 
         $this->assertEquals($expectedResponse, $result);
     }
 
     public function test_get_restaurant_reservations(): void
     {
+        $organizationId = 1;
         $restaurantId = 1;
         $query = ['date' => '2025-10-20'];
         $expectedResponse = [
@@ -98,16 +108,17 @@ class RestaurantServiceTest extends TestCase
         $this->httpClient
             ->shouldReceive('get')
             ->once()
-            ->with("/partner/restaurants/{$restaurantId}/reservations", $query)
+            ->with("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations", $query)
             ->andReturn($expectedResponse);
 
-        $result = $this->restaurantService->getReservations($restaurantId, $query);
+        $result = $this->restaurantService->getReservations($organizationId, $restaurantId, $query);
 
         $this->assertEquals($expectedResponse, $result);
     }
 
     public function test_get_restaurant_tables(): void
     {
+        $organizationId = 1;
         $restaurantId = 1;
         $expectedResponse = [
             'data' => [
@@ -119,16 +130,17 @@ class RestaurantServiceTest extends TestCase
         $this->httpClient
             ->shouldReceive('get')
             ->once()
-            ->with("/partner/restaurants/{$restaurantId}/tables")
+            ->with("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/tables", [])
             ->andReturn($expectedResponse);
 
-        $result = $this->restaurantService->getTables($restaurantId);
+        $result = $this->restaurantService->getTables($organizationId, $restaurantId);
 
         $this->assertEquals($expectedResponse, $result);
     }
 
     public function test_get_restaurant_statistics(): void
     {
+        $organizationId = 1;
         $restaurantId = 1;
         $query = ['start_date' => '2025-10-01', 'end_date' => '2025-10-31'];
         $expectedResponse = [
@@ -140,10 +152,10 @@ class RestaurantServiceTest extends TestCase
         $this->httpClient
             ->shouldReceive('get')
             ->once()
-            ->with("/partner/restaurants/{$restaurantId}/statistics", $query)
+            ->with("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/statistics", $query)
             ->andReturn($expectedResponse);
 
-        $result = $this->restaurantService->getStatistics($restaurantId, $query);
+        $result = $this->restaurantService->getStatistics($organizationId, $restaurantId, $query);
 
         $this->assertEquals($expectedResponse, $result);
         $this->assertArrayHasKey('total_reservations', $result);
@@ -151,17 +163,18 @@ class RestaurantServiceTest extends TestCase
 
     public function test_throws_exception_when_restaurant_not_found(): void
     {
+        $organizationId = 1;
         $restaurantId = 999;
 
         $this->httpClient
             ->shouldReceive('get')
             ->once()
-            ->with("/partner/restaurants/{$restaurantId}")
+            ->with("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}")
             ->andThrow(new \Exception('Not Found: Restaurant not found'));
 
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Not Found');
 
-        $this->restaurantService->get($restaurantId);
+        $this->restaurantService->get($organizationId, $restaurantId);
     }
 }

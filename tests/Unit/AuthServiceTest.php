@@ -4,18 +4,25 @@ namespace Tests\Unit;
 
 use App\Services\AuthService;
 use App\Services\HttpClient;
+use Mockery;
 use Tests\TestCase;
 
 class AuthServiceTest extends TestCase
 {
     private AuthService $authService;
-    private HttpClient $httpClient;
+    private $httpClient;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->httpClient = $this->mock(HttpClient::class);
+        $this->httpClient = Mockery::mock(HttpClient::class);
         $this->authService = new AuthService($this->httpClient);
+    }
+    
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
     }
 
     public function test_login_successful(): void

@@ -5,18 +5,25 @@ namespace Tests\Unit;
 use App\Services\TokenService;
 use App\Services\TokenStorage;
 use Illuminate\Support\Facades\Http;
+use Mockery;
 use Tests\TestCase;
 
 class TokenServiceTest extends TestCase
 {
     private TokenService $tokenService;
-    private TokenStorage $tokenStorage;
+    private $tokenStorage;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->tokenStorage = $this->mock(TokenStorage::class);
+        $this->tokenStorage = Mockery::mock(TokenStorage::class);
         $this->tokenService = new TokenService($this->tokenStorage);
+    }
+    
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
     }
 
     public function test_returns_existing_valid_token(): void

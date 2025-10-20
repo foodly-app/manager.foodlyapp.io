@@ -5,21 +5,28 @@ namespace Tests\Unit;
 use App\Services\HttpClient;
 use App\Services\TokenService;
 use Illuminate\Support\Facades\Http;
+use Mockery;
 use Tests\TestCase;
 
 class HttpClientTest extends TestCase
 {
     private HttpClient $httpClient;
-    private TokenService $tokenService;
+    private $tokenService;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->tokenService = $this->mock(TokenService::class);
+        $this->tokenService = Mockery::mock(TokenService::class);
         $this->httpClient = new HttpClient($this->tokenService);
         
         config(['services.partner.url' => 'https://api.test.com']);
         config(['services.partner.timeout' => 30]);
+    }
+    
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
     }
 
     public function test_get_request_successful(): void

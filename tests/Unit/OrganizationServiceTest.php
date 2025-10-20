@@ -4,18 +4,25 @@ namespace Tests\Unit;
 
 use App\Services\HttpClient;
 use App\Services\OrganizationService;
+use Mockery;
 use Tests\TestCase;
 
 class OrganizationServiceTest extends TestCase
 {
     private OrganizationService $organizationService;
-    private HttpClient $httpClient;
+    private $httpClient;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->httpClient = $this->mock(HttpClient::class);
+        $this->httpClient = Mockery::mock(HttpClient::class);
         $this->organizationService = new OrganizationService($this->httpClient);
+    }
+    
+    protected function tearDown(): void
+    {
+        Mockery::close();
+        parent::tearDown();
     }
 
     public function test_list_organizations(): void
