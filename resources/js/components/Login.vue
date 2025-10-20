@@ -28,31 +28,6 @@
 
         <div class="login-right">
             <div class="login-form-container">
-                <!-- Language Switcher -->
-                <div class="language-switcher">
-                    <Dropdown 
-                        v-model="currentLocale" 
-                        :options="locales" 
-                        optionLabel="name" 
-                        optionValue="code"
-                        @change="changeLocale"
-                        class="w-32"
-                    >
-                        <template #value="slotProps">
-                            <div class="flex items-center gap-2">
-                                <span class="text-xl">{{ getLocaleFlag(slotProps.value) }}</span>
-                                <span class="text-sm">{{ getLocaleName(slotProps.value) }}</span>
-                            </div>
-                        </template>
-                        <template #option="slotProps">
-                            <div class="flex items-center gap-2">
-                                <span class="text-xl">{{ slotProps.option.flag }}</span>
-                                <span>{{ slotProps.option.name }}</span>
-                            </div>
-                        </template>
-                    </Dropdown>
-                </div>
-
                 <div class="form-header">
                     <h2 class="text-3xl font-bold text-gray-800 mb-2">{{ $t('login.title') }}</h2>
                     <p class="text-gray-600">{{ $t('login.subtitle') }}</p>
@@ -122,10 +97,30 @@
                 </form>
 
                 <div class="form-footer">
-                    <p class="text-sm text-gray-600">
-                        {{ $t('common.noAccount') }}
-                        <a href="#" class="text-blue-600 hover:text-blue-700 font-semibold">{{ $t('common.register') }}</a>
-                    </p>
+                    <!-- Language Switcher -->
+                    <Dropdown 
+                        v-model="currentLocale" 
+                        :options="locales" 
+                        optionLabel="name" 
+                        optionValue="code"
+                        @change="changeLocale"
+                        class="language-dropdown"
+                    >
+                        <template #value="slotProps">
+                            <div class="flex items-center gap-2">
+                                <FlagGeorgia v-if="slotProps.value === 'ka'" :width="20" :height="14" />
+                                <FlagUK v-else-if="slotProps.value === 'en'" :width="20" :height="14" />
+                                <span class="text-sm">{{ getLocaleName(slotProps.value) }}</span>
+                            </div>
+                        </template>
+                        <template #option="slotProps">
+                            <div class="flex items-center gap-2">
+                                <FlagGeorgia v-if="slotProps.option.code === 'ka'" :width="20" :height="14" />
+                                <FlagUK v-else-if="slotProps.option.code === 'en'" :width="20" :height="14" />
+                                <span>{{ slotProps.option.name }}</span>
+                            </div>
+                        </template>
+                    </Dropdown>
                 </div>
             </div>
         </div>
@@ -137,6 +132,8 @@ import { ref, reactive, computed } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { useI18n } from 'vue-i18n';
 import axios from 'axios';
+import FlagGeorgia from './flags/FlagGeorgia.vue';
+import FlagUK from './flags/FlagUK.vue';
 
 const toast = useToast();
 const { t, locale } = useI18n();
@@ -149,8 +146,8 @@ const logoUrl = '/images/logo-h-white.png';
 const currentLocale = ref(locale.value);
 
 const locales = [
-    { code: 'ka', name: 'ქართული', flag: '🇬🇪' },
-    { code: 'en', name: 'English', flag: '🇬🇧' }
+    { code: 'ka', name: 'ქართული', flag: 'georgia' },
+    { code: 'en', name: 'English', flag: 'uk' }
 ];
 
 const form = reactive({
@@ -163,10 +160,6 @@ const errors = reactive({
     email: '',
     password: ''
 });
-
-const getLocaleFlag = (code) => {
-    return locales.find(l => l.code === code)?.flag || '🌐';
-};
 
 const getLocaleName = (code) => {
     return locales.find(l => l.code === code)?.name || '';
@@ -265,13 +258,6 @@ const handleLogin = async () => {
     display: grid;
     grid-template-columns: 1fr 1fr;
     min-height: 100vh;
-}
-
-.language-switcher {
-    position: absolute;
-    top: 1.5rem;
-    right: 1.5rem;
-    z-index: 10;
 }
 
 .login-left {
@@ -446,6 +432,12 @@ const handleLogin = async () => {
     text-align: center;
     padding-top: 2rem;
     border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: center;
+}
+
+.language-dropdown {
+    width: 160px;
 }
 
 /* Responsive */
