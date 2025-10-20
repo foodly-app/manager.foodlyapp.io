@@ -22,6 +22,16 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// Login Page
+Route::get('/login', function () {
+    return view('login');
+})->name('login.page');
+
+// Dashboard Route (Protected)
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware('auth')->name('dashboard');
+
 // Test Connection Route
 Route::get('/test-connection', function (TokenService $tokenService) {
     try {

@@ -1,0 +1,90 @@
+{
+  "common": {
+    "email": "ელ-ფოსტა",
+    "password": "პაროლი",
+    "rememberMe": "დამახსოვრება",
+    "forgotPassword": "დაგავიწყდა პაროლი?",
+    "signIn": "შესვლა",
+    "signOut": "გასვლა",
+    "logout": "გასვლა",
+    "profile": "პროფილი",
+    "notifications": "შეტყობინებები",
+    "settings": "პარამეტრები",
+    "noAccount": "არ გაქვთ ანგარიში?",
+    "register": "დარეგისტრირდით",
+    "loading": "იტვირთება...",
+    "submit": "გაგზავნა",
+    "cancel": "გაუქმება",
+    "save": "შენახვა",
+    "delete": "წაშლა",
+    "edit": "რედაქტირება",
+    "view": "ნახვა",
+    "search": "ძიება",
+    "filter": "ფილტრი",
+    "actions": "მოქმედებები"
+  },
+  "login": {
+    "title": "შესვლა",
+    "subtitle": "გამარჯობა, კეთილი იყოს თქვენი დაბრუნება!",
+    "brandTitle": "For Partners",
+    "brandDescription": "მართეთ რესტორანი ეფექტურად",
+    "emailPlaceholder": "example@foodly.ge",
+    "passwordPlaceholder": "••••••••",
+    "features": {
+      "bookings": "დაჯავშნების მართვა",
+      "analytics": "ანალიტიკა და სტატისტიკა",
+      "customers": "კლიენტების მართვა"
+    },
+    "errors": {
+      "emailRequired": "ელ-ფოსტა აუცილებელია",
+      "emailInvalid": "ელ-ფოსტა არასწორია",
+      "passwordRequired": "პაროლი აუცილებელია",
+      "passwordMinLength": "პაროლი უნდა შეიცავდეს მინიმუმ 6 სიმბოლოს",
+      "invalidCredentials": "არასწორი მონაცემები. გთხოვთ სცადოთ ხელახლა.",
+      "genericError": "დაფიქსირდა შეცდომა. გთხოვთ სცადოთ ხელახლა."
+    },
+    "success": {
+      "loginSuccess": "წარმატებით შეხვედით! გადამისამართება...",
+      "logoutSuccess": "წარმატებით გახვედით სისტემიდან"
+    }
+  },
+  "dashboard": {
+    "title": "პარტნიორის პანელი",
+    "welcome": "მოგესალმებით!",
+    "loadSuccess": "პანელი წარმატებით ჩაიტვირთა",
+    "stats": {
+      "totalBookings": "სულ დაჯავშნები",
+      "activeTables": "აქტიური მაგიდები",
+      "totalRevenue": "სულ შემოსავალი",
+      "pendingOrders": "მიმდინარე შეკვეთები"
+    },
+    "recentBookings": {
+      "title": "ბოლო დაჯავშნები",
+      "viewAll": "ყველას ნახვა",
+      "columns": {
+        "id": "ID",
+        "customer": "კლიენტი",
+        "table": "მაგიდა",
+        "date": "თარიღი",
+        "time": "დრო",
+        "status": "სტატუსი"
+      },
+      "status": {
+        "confirmed": "დადასტურებული",
+        "pending": "მოლოდინში",
+        "cancelled": "გაუქმებული",
+        "completed": "დასრულებული"
+      }
+    },
+    "quickActions": {
+      "title": "სწრაფი მოქმედებები",
+      "newBooking": "ახალი დაჯავშნა",
+      "manageTables": "მაგიდების მართვა",
+      "viewMenu": "მენიუს ნახვა"
+    },
+    "weeklyOverview": {
+      "title": "კვირის მიმოხილვა",
+      "bookings": "დაჯავშნები"
+    }
+  }
+}

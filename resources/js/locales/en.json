@@ -1,0 +1,90 @@
+{
+  "common": {
+    "email": "Email",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "logout": "Logout",
+    "profile": "Profile",
+    "notifications": "Notifications",
+    "settings": "Settings",
+    "noAccount": "Don't have an account?",
+    "register": "Register",
+    "loading": "Loading...",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "search": "Search",
+    "filter": "Filter",
+    "actions": "Actions"
+  },
+  "login": {
+    "title": "Sign In",
+    "subtitle": "Welcome back!",
+    "brandTitle": "For Partners",
+    "brandDescription": "Manage your restaurant easily and efficiently",
+    "emailPlaceholder": "example@foodlyapp.ge",
+    "passwordPlaceholder": "••••••••",
+    "features": {
+      "bookings": "Booking Management",
+      "analytics": "Analytics and Statistics",
+      "customers": "Customer Management"
+    },
+    "errors": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Email is invalid",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 6 characters",
+      "invalidCredentials": "Invalid credentials. Please try again.",
+      "genericError": "An error occurred. Please try again."
+    },
+    "success": {
+      "loginSuccess": "Login successful! Redirecting...",
+      "logoutSuccess": "You have been logged out successfully"
+    }
+  },
+  "dashboard": {
+    "title": "Partner Dashboard",
+    "welcome": "Welcome!",
+    "loadSuccess": "Dashboard loaded successfully",
+    "stats": {
+      "totalBookings": "Total Bookings",
+      "activeTables": "Active Tables",
+      "totalRevenue": "Total Revenue",
+      "pendingOrders": "Pending Orders"
+    },
+    "recentBookings": {
+      "title": "Recent Bookings",
+      "viewAll": "View All",
+      "columns": {
+        "id": "ID",
+        "customer": "Customer",
+        "table": "Table",
+        "date": "Date",
+        "time": "Time",
+        "status": "Status"
+      },
+      "status": {
+        "confirmed": "Confirmed",
+        "pending": "Pending",
+        "cancelled": "Cancelled",
+        "completed": "Completed"
+      }
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "newBooking": "New Booking",
+      "manageTables": "Manage Tables",
+      "viewMenu": "View Menu"
+    },
+    "weeklyOverview": {
+      "title": "Weekly Overview",
+      "bookings": "Bookings"
+    }
+  }
+}
