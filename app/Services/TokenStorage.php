@@ -16,12 +16,12 @@ class TokenStorage
         $this->ensureDirectoryExists();
     }
 
-    public function save(string $token): void
+    public function save(string $token, ?int $expiresAt = null): void
     {
         $data = [
             'token' => $token,
             'created_at' => Carbon::now()->timestamp,
-            'expires_at' => Carbon::now()->addHour()->timestamp
+            'expires_at' => $expiresAt ?? Carbon::now()->addDays(7)->timestamp
         ];
 
         File::put($this->storagePath, json_encode($data, JSON_PRETTY_PRINT));

@@ -42,18 +42,27 @@ class TokenService
     private function generateNewToken(): string
     {
         try {
-            $response = Http::post(config('partner.api.url') . '/login', [
-                'email' => config('partner.api.email'),
-                'password' => config('partner.api.password')
-            ]);
+            $baseUrl = config('services.partner.url');
+            
+            $response = Http::withoutVerifying()
+                ->withHeaders([
+                    'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
+                ])
+                ->post($baseUrl . '/api/partner/login', [
+                    'email' => config('services.partner.email'),
+                    'password' => config('services.partner.password')
+                ]);
 
             if ($response->successful()) {
                 $token = $response->json('token');
-                $this->storage->save($token);
+                
+                // ვინახავთ ტოკენს ვადის ინფორმაციასთან ერთად
+                $expiresAt = now()->addDays(7)->timestamp; // ტოკენი 7 დღე ვალიდურია
+                $this->storage->save($token, $expiresAt);
+                
                 return $token;
-            }
-
-            throw new Exception('Failed to generate token: ' . $response->body());
+            }            throw new Exception('Failed to generate token: ' . $response->body());
 
         } catch (Exception $e) {
             Log::error('Token generation failed: ' . $e->getMessage());

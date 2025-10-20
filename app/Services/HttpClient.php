@@ -18,7 +18,7 @@ class HttpClient
     public function __construct(
         private readonly TokenService $tokenService
     ) {
-        $this->baseUrl = config('partner.api.url');
+        $this->baseUrl = config('services.partner.url');
     }
 
     /**
@@ -109,7 +109,7 @@ class HttpClient
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json'
             ])
-            ->timeout(config('partner.api.timeout', 30));
+            ->timeout(config('services.partner.timeout', 30));
     }
 
     /**
@@ -120,7 +120,7 @@ class HttpClient
      */
     private function buildUrl(string $endpoint): string
     {
-        return $this->baseUrl . '/api' . ($endpoint[0] === '/' ? $endpoint : "/{$endpoint}");
+        return rtrim($this->baseUrl, '/') . '/' . ltrim($endpoint, '/');
     }
 
     /**

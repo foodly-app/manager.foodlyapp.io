@@ -12,6 +12,23 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
+// Test Route
+Route::get('test-connection', function(App\Services\TokenService $tokenService) {
+    try {
+        $token = $tokenService->getToken();
+        return response()->json([
+            'success' => true,
+            'message' => 'Connection successful',
+            'token' => $token
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage()
+        ], 500);
+    }
+});
+
 // Auth Routes
 Route::post('login', [AuthController::class, 'login'])->name('login');
 
