@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -26,13 +27,29 @@ class AuthController extends Controller
                 'password' => ['required', 'string']
             ]);
 
+            Log::info('Login attempt:', $credentials);
+
             $result = $this->authService->login($credentials);
+
+            Log::info('Login result:', $result);
+
+            // Store token in session for subsequent requests
+            if (isset($result['token'])) {
+                session(['partner_token' => $result['token']]);
+                session(['partner_user' => $result['user']]);
+            }
 
             return response()->json([
                 'success' => true,
-                'data' => $result
+                'token' => $result['token'] ?? null,
+                'user' => $result['user'] ?? null
             ]);
         } catch (\Exception $e) {
+            Log::error('Login failed:', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
@@ -70,13 +87,23 @@ class AuthController extends Controller
     public function logout(): JsonResponse
     {
         try {
-            $this->authService->logout();
+            // Only call API logout if we have a session token
+            if (session('partner_token')) {
+                $this->authService->logout();
+            }
+
+            // Clear session data
+            session()->forget(['partner_token', 'partner_user']);
+            session()->flush();
 
             return response()->json([
                 'success' => true,
                 'message' => 'Successfully logged out'
             ]);
         } catch (\Exception $e) {
+            // Even if API logout fails, clear local session
+            session()->forget(['partner_token', 'partner_user']);
+            
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
@@ -94,10 +121,8 @@ class AuthController extends Controller
         try {
             $dashboard = $this->authService->initialDashboard();
 
-            return response()->json([
-                'success' => true,
-                'data' => $dashboard
-            ]);
+            // Return the API response directly (it already has success and data structure)
+            return response()->json($dashboard);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

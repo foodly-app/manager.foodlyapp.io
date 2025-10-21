@@ -214,6 +214,8 @@ const handleLogin = async () => {
             remember: form.remember
         });
 
+        console.log('Login Response:', response.data);
+
         if (response.data.success) {
             toast.add({
                 severity: 'success',
@@ -234,6 +236,8 @@ const handleLogin = async () => {
         }
     } catch (error) {
         console.error('Login error:', error);
+        console.error('Error response:', error.response?.data);
+        console.error('Error status:', error.response?.status);
         
         if (error.response?.status === 422) {
             // Validation errors

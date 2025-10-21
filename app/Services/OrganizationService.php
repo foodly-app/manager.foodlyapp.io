@@ -19,7 +19,7 @@ class OrganizationService
      */
     public function list(array $query = []): array
     {
-        return $this->client->get('/partner/organizations', $query);
+        return $this->client->get('/api/partner/organizations', $query);
     }
 
     /**
@@ -31,7 +31,7 @@ class OrganizationService
      */
     public function get(int $id): array
     {
-        return $this->client->get("/partner/organizations/{$id}");
+        return $this->client->get("/api/partner/organizations/{$id}");
     }
 
     /**
@@ -44,7 +44,7 @@ class OrganizationService
      */
     public function update(int $id, array $data): array
     {
-        return $this->client->put("/partner/organizations/{$id}", $data);
+        return $this->client->put("/api/partner/organizations/{$id}", $data);
     }
 
     /**
@@ -56,7 +56,7 @@ class OrganizationService
      */
     public function getStatistics(int $id): array
     {
-        return $this->client->get("/partner/organizations/{$id}/statistics");
+        return $this->client->get("/api/partner/organizations/{$id}/statistics");
     }
 
     /**
@@ -69,7 +69,7 @@ class OrganizationService
      */
     public function getRestaurants(int $id, array $query = []): array
     {
-        return $this->client->get("/partner/organizations/{$id}/restaurants", $query);
+        return $this->client->get("/api/partner/organizations/{$id}/restaurants", $query);
     }
 
     /**
@@ -81,7 +81,7 @@ class OrganizationService
      */
     public function getDashboard(int $id): array
     {
-        return $this->client->get("/partner/organizations/{$id}/dashboard");
+        return $this->client->get("/api/partner/organizations/{$id}/dashboard");
     }
 
     /**
@@ -94,7 +94,7 @@ class OrganizationService
      */
     public function getDashboardStats(int $id, array $query = []): array
     {
-        return $this->client->get("/partner/organizations/{$id}/dashboard/stats", $query);
+        return $this->client->get("/api/partner/organizations/{$id}/dashboard/stats", $query);
     }
 
     /**
@@ -106,7 +106,7 @@ class OrganizationService
      */
     public function getDashboardOverview(int $id): array
     {
-        return $this->client->get("/partner/organizations/{$id}/dashboard/overview");
+        return $this->client->get("/api/partner/organizations/{$id}/dashboard/overview");
     }
 
     /**
@@ -118,7 +118,7 @@ class OrganizationService
      */
     public function getTeam(int $id): array
     {
-        return $this->client->get("/partner/organizations/{$id}/team");
+        return $this->client->get("/api/partner/organizations/{$id}/team");
     }
 
     /**
@@ -131,7 +131,7 @@ class OrganizationService
      */
     public function getTeamMember(int $organizationId, int $userId): array
     {
-        return $this->client->get("/partner/organizations/{$organizationId}/team/{$userId}");
+        return $this->client->get("/api/partner/organizations/{$organizationId}/team/{$userId}");
     }
 
     /**
@@ -144,7 +144,7 @@ class OrganizationService
      */
     public function createTeamMember(int $organizationId, array $data): array
     {
-        return $this->client->post("/partner/organizations/{$organizationId}/team", $data);
+        return $this->client->post("/api/partner/organizations/{$organizationId}/team", $data);
     }
 
     /**
@@ -158,7 +158,7 @@ class OrganizationService
      */
     public function updateTeamMemberRole(int $organizationId, int $userId, array $data): array
     {
-        return $this->client->put("/partner/organizations/{$organizationId}/team/{$userId}/role", $data);
+        return $this->client->put("/api/partner/organizations/{$organizationId}/team/{$userId}/role", $data);
     }
 
     /**
@@ -171,7 +171,7 @@ class OrganizationService
      */
     public function deleteTeamMember(int $organizationId, int $userId): array
     {
-        return $this->client->delete("/partner/organizations/{$organizationId}/team/{$userId}");
+        return $this->client->delete("/api/partner/organizations/{$organizationId}/team/{$userId}");
     }
 
     /**
@@ -183,7 +183,7 @@ class OrganizationService
      */
     public function getInvitations(int $organizationId): array
     {
-        return $this->client->get("/partner/organizations/{$organizationId}/invitations");
+        return $this->client->get("/api/partner/organizations/{$organizationId}/invitations");
     }
 
     /**
@@ -196,7 +196,7 @@ class OrganizationService
      */
     public function sendInvitation(int $organizationId, array $data): array
     {
-        return $this->client->post("/partner/organizations/{$organizationId}/invitations", $data);
+        return $this->client->post("/api/partner/organizations/{$organizationId}/invitations", $data);
     }
 
     /**
@@ -209,7 +209,7 @@ class OrganizationService
      */
     public function getAnalyticsReservations(int $organizationId, array $query = []): array
     {
-        return $this->client->get("/partner/organizations/{$organizationId}/analytics/reservations", $query);
+        return $this->client->get("/api/partner/organizations/{$organizationId}/analytics/reservations", $query);
     }
 
     /**
@@ -222,7 +222,7 @@ class OrganizationService
      */
     public function getAnalyticsRevenue(int $organizationId, array $query = []): array
     {
-        return $this->client->get("/partner/organizations/{$organizationId}/analytics/revenue", $query);
+        return $this->client->get("/api/partner/organizations/{$organizationId}/analytics/revenue", $query);
     }
 
     /**
@@ -235,7 +235,7 @@ class OrganizationService
      */
     public function getAnalyticsPopularTables(int $organizationId, array $query = []): array
     {
-        return $this->client->get("/partner/organizations/{$organizationId}/analytics/popular-tables", $query);
+        return $this->client->get("/api/partner/organizations/{$organizationId}/analytics/popular-tables", $query);
     }
 
     /**
@@ -248,7 +248,7 @@ class OrganizationService
      */
     public function getAnalyticsPeakHours(int $organizationId, array $query = []): array
     {
-        return $this->client->get("/partner/organizations/{$organizationId}/analytics/peak-hours", $query);
+        return $this->client->get("/api/partner/organizations/{$organizationId}/analytics/peak-hours", $query);
     }
 
     /**
@@ -261,6 +261,6 @@ class OrganizationService
      */
     public function getAnalyticsCustomerInsights(int $organizationId, array $query = []): array
     {
-        return $this->client->get("/partner/organizations/{$organizationId}/analytics/customer-insights", $query);
+        return $this->client->get("/api/partner/organizations/{$organizationId}/analytics/customer-insights", $query);
     }
 }

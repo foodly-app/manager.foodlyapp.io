@@ -104,7 +104,15 @@ class HttpClient
      */
     private function buildRequest(): PendingRequest
     {
-        return Http::withToken($this->tokenService->getToken())
+        // Check if user is logged in via session (for web requests)
+        $token = session('partner_token');
+        
+        // If no session token, use the service account token (for backend tasks)
+        if (!$token) {
+            $token = $this->tokenService->getToken();
+        }
+
+        return Http::withToken($token)
             ->withHeaders([
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json'

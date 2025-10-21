@@ -25,12 +25,12 @@ Route::get('/', function () {
 // Login Page
 Route::get('/login', function () {
     return view('login');
-})->name('login.page');
+})->name('login');
 
 // Dashboard Route (Protected)
 Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware('auth')->name('dashboard');
+})->middleware('partner.auth')->name('dashboard');
 
 // Test Connection Route
 Route::get('/test-connection', function (TokenService $tokenService) {
@@ -61,24 +61,24 @@ Route::prefix('auth')->name('auth.')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login');
 
     // Get Current User
-    Route::get('/me', [AuthController::class, 'me'])->middleware('auth')->name('me');
+    Route::get('/me', [AuthController::class, 'me'])->middleware('partner.auth')->name('me');
 
     // Logout
-    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('partner.auth')->name('logout');
 
     // Initial Dashboard
-    Route::get('/initial-dashboard', [AuthController::class, 'initialDashboard'])->middleware('auth')->name('initial-dashboard');
+    Route::get('/initial-dashboard', [AuthController::class, 'initialDashboard'])->middleware('partner.auth')->name('initial-dashboard');
 
     // Profile
-    Route::get('/profile', [AuthController::class, 'getProfile'])->middleware('auth')->name('profile.get');
-    Route::put('/profile', [AuthController::class, 'updateProfile'])->middleware('auth')->name('profile.update');
+    Route::get('/profile', [AuthController::class, 'getProfile'])->middleware('partner.auth')->name('profile.get');
+    Route::put('/profile', [AuthController::class, 'updateProfile'])->middleware('partner.auth')->name('profile.update');
 
     // Avatar
-    Route::post('/avatar', [AuthController::class, 'uploadAvatar'])->middleware('auth')->name('avatar.upload');
-    Route::delete('/avatar', [AuthController::class, 'deleteAvatar'])->middleware('auth')->name('avatar.delete');
+    Route::post('/avatar', [AuthController::class, 'uploadAvatar'])->middleware('partner.auth')->name('avatar.upload');
+    Route::delete('/avatar', [AuthController::class, 'deleteAvatar'])->middleware('partner.auth')->name('avatar.delete');
 
     // Password
-    Route::put('/password', [AuthController::class, 'changePassword'])->middleware('auth')->name('password.change');
+    Route::put('/password', [AuthController::class, 'changePassword'])->middleware('partner.auth')->name('password.change');
 });
 
 /*
@@ -87,7 +87,7 @@ Route::prefix('auth')->name('auth.')->group(function () {
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('organizations')->name('organizations.')->middleware('auth')->group(function () {
+Route::prefix('organizations')->name('organizations.')->middleware('partner.auth')->group(function () {
     // CRUD
     Route::get('/', [OrganizationController::class, 'index'])->name('index');
     Route::get('/{id}', [OrganizationController::class, 'show'])->name('show');

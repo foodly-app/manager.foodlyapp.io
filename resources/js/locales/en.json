@@ -21,7 +21,64 @@
     "view": "View",
     "search": "Search",
     "filter": "Filter",
-    "actions": "Actions"
+    "actions": "Actions",
+    "success": "Success",
+    "error": "Error"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "bookings": "Bookings",
+    "tables": "Tables",
+    "menu": "Menu",
+    "settings": "Settings"
+  },
+  "bookings": {
+    "title": "Bookings",
+    "subtitle": "Manage your restaurant reservations",
+    "table": {
+      "id": "ID",
+      "customer": "Customer",
+      "phone": "Phone",
+      "table": "Table",
+      "date": "Date",
+      "time": "Time",
+      "guests": "Guests",
+      "status": "Status"
+    },
+    "filters": {
+      "search": "Search",
+      "searchPlaceholder": "Search by customer name or phone...",
+      "status": "Status",
+      "allStatuses": "All Statuses",
+      "date": "Date",
+      "selectDate": "Select date"
+    },
+    "status": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "actions": {
+      "newBooking": "New Booking",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    },
+    "viewDialog": {
+      "title": "Booking Details"
+    },
+    "createDialog": {
+      "message": "New booking functionality coming soon..."
+    },
+    "messages": {
+      "confirmed": "Booking confirmed successfully",
+      "cancelled": "Booking cancelled successfully"
+    },
+    "errors": {
+      "fetchFailed": "Failed to load bookings",
+      "confirmFailed": "Failed to confirm booking",
+      "cancelFailed": "Failed to cancel booking"
+    }
   },
   "login": {
     "title": "Sign In",
@@ -55,6 +112,7 @@
     "stats": {
       "totalBookings": "Total Bookings",
       "activeTables": "Active Tables",
+      "totalPlaces": "Total Places",
       "totalRevenue": "Total Revenue",
       "pendingOrders": "Pending Orders"
     },
@@ -73,7 +131,8 @@
         "confirmed": "Confirmed",
         "pending": "Pending",
         "cancelled": "Cancelled",
-        "completed": "Completed"
+        "completed": "Completed",
+        "paid": "Paid"
       }
     },
     "quickActions": {

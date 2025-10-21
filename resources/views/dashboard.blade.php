@@ -13,6 +13,6 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
-    <div id="app" data-page="dashboard"></div>
+    <div id="app" data-page="app"></div>
 </body>
 </html>

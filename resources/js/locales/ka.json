@@ -21,7 +21,64 @@
     "view": "ნახვა",
     "search": "ძიება",
     "filter": "ფილტრი",
-    "actions": "მოქმედებები"
+    "actions": "მოქმედებები",
+    "success": "წარმატება",
+    "error": "შეცდომა"
+  },
+  "menu": {
+    "dashboard": "მთავარი",
+    "bookings": "დაჯავშნები",
+    "tables": "მაგიდები",
+    "menu": "მენიუ",
+    "settings": "პარამეტრები"
+  },
+  "bookings": {
+    "title": "დაჯავშნები",
+    "subtitle": "მართეთ თქვენი რესტორნის დაჯავშნები",
+    "table": {
+      "id": "ID",
+      "customer": "სტუმარი",
+      "phone": "ტელეფონი",
+      "table": "მაგიდა",
+      "date": "თარიღი",
+      "time": "დრო",
+      "guests": "სტუმრები",
+      "status": "სტატუსი"
+    },
+    "filters": {
+      "search": "ძებნა",
+      "searchPlaceholder": "ძებნა სტუმრის სახელით ან ტელეფონით...",
+      "status": "სტატუსი",
+      "allStatuses": "ყველა სტატუსი",
+      "date": "თარიღი",
+      "selectDate": "აირჩიეთ თარიღი"
+    },
+    "status": {
+      "pending": "მოლოდინში",
+      "confirmed": "დადასტურებული",
+      "completed": "დასრულებული",
+      "cancelled": "გაუქმებული"
+    },
+    "actions": {
+      "newBooking": "ახალი დაჯავშნა",
+      "confirm": "დადასტურება",
+      "cancel": "გაუქმება"
+    },
+    "viewDialog": {
+      "title": "დაჯავშნის დეტალები"
+    },
+    "createDialog": {
+      "message": "ახალი დაჯავშნის ფუნქციონალი მალე დაემატება..."
+    },
+    "messages": {
+      "confirmed": "დაჯავშნა წარმატებით დადასტურდა",
+      "cancelled": "დაჯავშნა წარმატებით გაუქმდა"
+    },
+    "errors": {
+      "fetchFailed": "დაჯავშნების ჩატვირთვა ვერ მოხერხდა",
+      "confirmFailed": "დადასტურება ვერ მოხერხდა",
+      "cancelFailed": "გაუქმება ვერ მოხერხდა"
+    }
   },
   "login": {
     "title": "შესვლა",
@@ -55,6 +112,7 @@
     "stats": {
       "totalBookings": "სულ დაჯავშნები",
       "activeTables": "აქტიური მაგიდები",
+      "totalPlaces": "სულ ადგილები",
       "totalRevenue": "სულ შემოსავალი",
       "pendingOrders": "მიმდინარე შეკვეთები"
     },
@@ -73,7 +131,8 @@
         "confirmed": "დადასტურებული",
         "pending": "მოლოდინში",
         "cancelled": "გაუქმებული",
-        "completed": "დასრულებული"
+        "completed": "დასრულებული",
+        "paid": "გადახდილი"
       }
     },
     "quickActions": {

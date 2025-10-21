@@ -38,13 +38,13 @@ class OrganizationController extends Controller
     /**
      * Get organization by ID
      *
-     * @param int $id
+     * @param string $id
      * @return JsonResponse
      */
-    public function show(int $id): JsonResponse
+    public function show(string $id): JsonResponse
     {
         try {
-            $organization = $this->organizationService->get($id);
+            $organization = $this->organizationService->get((int)$id);
 
             return response()->json([
                 'success' => true,
@@ -115,13 +115,13 @@ class OrganizationController extends Controller
     /**
      * Get organization dashboard
      *
-     * @param int $id
+     * @param string $id
      * @return JsonResponse
      */
-    public function dashboard(int $id): JsonResponse
+    public function dashboard(string $id): JsonResponse
     {
         try {
-            $dashboard = $this->organizationService->getDashboard($id);
+            $dashboard = $this->organizationService->getDashboard((int)$id);
 
             return response()->json([
                 'success' => true,
@@ -138,13 +138,13 @@ class OrganizationController extends Controller
     /**
      * Get dashboard statistics
      *
-     * @param int $id
+     * @param string $id
      * @return JsonResponse
      */
-    public function dashboardStats(int $id): JsonResponse
+    public function dashboardStats(string $id): JsonResponse
     {
         try {
-            $stats = $this->organizationService->getDashboardStats($id);
+            $stats = $this->organizationService->getDashboardStats((int)$id);
 
             return response()->json([
                 'success' => true,
@@ -161,13 +161,13 @@ class OrganizationController extends Controller
     /**
      * Get dashboard overview
      *
-     * @param int $id
+     * @param string $id
      * @return JsonResponse
      */
-    public function dashboardOverview(int $id): JsonResponse
+    public function dashboardOverview(string $id): JsonResponse
     {
         try {
-            $overview = $this->organizationService->getDashboardOverview($id);
+            $overview = $this->organizationService->getDashboardOverview((int)$id);
 
             return response()->json([
                 'success' => true,

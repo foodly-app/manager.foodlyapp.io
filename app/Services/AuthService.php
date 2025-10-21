@@ -19,7 +19,7 @@ class AuthService
      */
     public function login(array $credentials): array
     {
-        return $this->client->post('/partner/login', $credentials);
+        return $this->client->post('/api/partner/login', $credentials);
     }
 
     /**
@@ -30,7 +30,7 @@ class AuthService
      */
     public function me(): array
     {
-        return $this->client->get('/partner/me');
+        return $this->client->get('/api/partner/me');
     }
 
     /**
@@ -41,7 +41,7 @@ class AuthService
      */
     public function initialDashboard(): array
     {
-        return $this->client->get('/partner/initial-dashboard');
+        return $this->client->get('/api/partner/initial-dashboard');
     }
 
     /**
@@ -52,7 +52,7 @@ class AuthService
      */
     public function logout(): array
     {
-        return $this->client->post('/partner/logout');
+        return $this->client->post('/api/partner/logout');
     }
 
     /**
@@ -63,7 +63,7 @@ class AuthService
      */
     public function getProfile(): array
     {
-        return $this->client->get('/partner/profile');
+        return $this->client->get('/api/partner/profile');
     }
 
     /**
@@ -75,7 +75,7 @@ class AuthService
      */
     public function updateProfile(array $data): array
     {
-        return $this->client->put('/partner/profile', $data);
+        return $this->client->put('/api/partner/profile', $data);
     }
 
     /**
@@ -87,7 +87,7 @@ class AuthService
      */
     public function uploadAvatar($avatar): array
     {
-        return $this->client->post('/partner/profile/avatar', [
+        return $this->client->post('/api/partner/profile/avatar', [
             'avatar' => $avatar
         ]);
     }
@@ -100,7 +100,7 @@ class AuthService
      */
     public function deleteAvatar(): array
     {
-        return $this->client->delete('/partner/profile/avatar');
+        return $this->client->delete('/api/partner/profile/avatar');
     }
 
     /**
@@ -112,6 +112,6 @@ class AuthService
      */
     public function changePassword(array $data): array
     {
-        return $this->client->put('/partner/profile/password', $data);
+        return $this->client->put('/api/partner/profile/password', $data);
     }
 } 
