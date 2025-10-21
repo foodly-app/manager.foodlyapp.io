@@ -41,20 +41,27 @@ class ReservationController extends Controller
     }
 
     /**
-     * Get calendar view of reservations
+     * Get reservations calendar
      *
      * @param Request $request
+     * @param int|null $organizationId
+     * @param int|null $restaurantId
      * @return JsonResponse
      */
-    public function calendar(Request $request): JsonResponse
+    public function calendar(Request $request, int $organizationId = null, int $restaurantId = null): JsonResponse
     {
         try {
-            $calendar = $this->reservationService->calendar($request->query());
+            $params = $request->query();
+            
+            // If organization and restaurant IDs are provided via route parameters, use them
+            if ($organizationId && $restaurantId) {
+                $params['organization_id'] = $organizationId;
+                $params['restaurant_id'] = $restaurantId;
+            }
+            
+            $calendar = $this->reservationService->calendar($params);
 
-            return response()->json([
-                'success' => true,
-                'data' => $calendar
-            ]);
+            return response()->json($calendar);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -76,10 +83,7 @@ class ReservationController extends Controller
         try {
             $reservation = $this->reservationService->get($organizationId, $restaurantId, $id);
 
-            return response()->json([
-                'success' => true,
-                'data' => $reservation
-            ]);
+            return response()->json($reservation);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

@@ -34,7 +34,7 @@
   },
   "menu": {
     "dashboard": "მთავარი",
-    "bookings": "დაჯავშნები",
+    "bookings": "ჯავშნები",
     "tables": "მაგიდები",
     "places": "ადგილები",
     "calendar": "კალენდარი",
@@ -52,11 +52,18 @@
       "id": "ID",
       "customer": "სტუმარი",
       "phone": "ტელეფონი",
+      "email": "ელფოსტა",
+      "reservationNumber": "დაჯავშნის №",
       "table": "მაგიდა",
+      "place": "ადგილმდებარეობა",
       "date": "თარიღი",
       "time": "დრო",
+      "duration": "ხანგრძლივობა",
       "guests": "სტუმრები",
-      "status": "სტატუსი"
+      "status": "სტატუსი",
+      "paymentStatus": "გადახდის სტატუსი",
+      "depositAmount": "დეპოზიტი",
+      "notes": "შენიშვნები"
     },
     "filters": {
       "search": "ძებნა",
@@ -66,11 +73,17 @@
       "date": "თარიღი",
       "selectDate": "აირჩიეთ თარიღი"
     },
+    "summary": {
+      "showing": "ნაჩვენებია {count} დაჯავშნა",
+      "total": "სულ: {count}"
+    },
     "status": {
       "pending": "მოლოდინში",
       "confirmed": "დადასტურებული",
+      "seated": "ადგილზეა",
       "completed": "დასრულებული",
-      "cancelled": "გაუქმებული"
+      "cancelled": "გაუქმებული",
+      "no_show": "არ მოსულა"
     },
     "actions": {
       "newBooking": "ახალი დაჯავშნა",

@@ -168,6 +168,9 @@ Route::middleware('auth:sanctum')->prefix('reservations')->name('reservations.')
 });
 
 Route::middleware('auth:sanctum')->prefix('organizations/{organizationId}/restaurants/{restaurantId}/reservations')->name('reservations.restaurant.')->group(function () {
+    // Calendar
+    Route::get('/calendar', [ReservationController::class, 'calendar'])->name('calendar');
+    
     // CRUD
     Route::post('/', [ReservationController::class, 'store'])->name('store');
     Route::get('/{id}', [ReservationController::class, 'show'])->name('show');

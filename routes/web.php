@@ -115,8 +115,15 @@ Route::get('/places', function () {
     }
 })->middleware('partner.auth')->name('places.index');
 
-// Reservation Status Actions (must be before catch-all)
+// Reservation Routes (must be before catch-all)
 Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/reservations')->middleware('partner.auth')->group(function () {
+    // Calendar
+    Route::get('/calendar', [ReservationController::class, 'calendar'])->name('reservations.calendar');
+    
+    // Individual reservation
+    Route::get('/{id}', [ReservationController::class, 'show'])->name('reservations.show');
+    
+    // Status Actions
     Route::post('/{id}/confirm', [ReservationController::class, 'confirm'])->name('reservations.confirm');
     Route::post('/{id}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
     Route::post('/{id}/paid', [ReservationController::class, 'markAsPaid'])->name('reservations.paid');
@@ -127,7 +134,7 @@ Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/reserva
 // SPA Routes - All routes that use Vue Router should return the dashboard view
 Route::get('/{any}', function () {
     return view('dashboard');
-})->where('any', '^(?!api|auth|test-connection|organizations|reservations|tables|places|calendar).*$')
+})->where('any', '^(?!api|auth|test-connection|organizations|reservations|tables|places).*$')
   ->middleware('partner.auth')
   ->name('spa');
 
@@ -299,23 +306,23 @@ Route::prefix('organizations/{organizationId}/restaurants')->name('restaurants.'
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/booking')->name('booking.')->middleware('partner.auth')->group(function () {
-    // Settings
-    Route::get('/settings', [BookingController::class, 'getSettings'])->name('settings.get');
-    Route::put('/settings', [BookingController::class, 'updateSettings'])->name('settings.update');
+// Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/booking')->name('booking.')->middleware('partner.auth')->group(function () {
+//     // Settings
+//     Route::get('/settings', [BookingController::class, 'getSettings'])->name('settings.get');
+//     Route::put('/settings', [BookingController::class, 'updateSettings'])->name('settings.update');
 
-    // Time Slots
-    Route::get('/time-slots', [BookingController::class, 'getTimeSlots'])->name('time-slots.get');
-    Route::put('/time-slots', [BookingController::class, 'updateTimeSlots'])->name('time-slots.update');
+//     // Time Slots
+//     Route::get('/time-slots', [BookingController::class, 'getTimeSlots'])->name('time-slots.get');
+//     Route::put('/time-slots', [BookingController::class, 'updateTimeSlots'])->name('time-slots.update');
 
-    // Availability
-    Route::get('/availability', [BookingController::class, 'checkAvailability'])->name('availability.check');
+//     // Availability
+//     Route::get('/availability', [BookingController::class, 'checkAvailability'])->name('availability.check');
 
-    // Blocked Dates
-    Route::get('/blocked-dates', [BookingController::class, 'getBlockedDates'])->name('blocked-dates.get');
-    Route::post('/blocked-dates', [BookingController::class, 'blockDates'])->name('blocked-dates.block');
-    Route::delete('/blocked-dates/{id}', [BookingController::class, 'unblockDates'])->name('blocked-dates.unblock');
-});
+//     // Blocked Dates
+//     Route::get('/blocked-dates', [BookingController::class, 'getBlockedDates'])->name('blocked-dates.get');
+//     Route::post('/blocked-dates', [BookingController::class, 'blockDates'])->name('blocked-dates.block');
+//     Route::delete('/blocked-dates/{id}', [BookingController::class, 'unblockDates'])->name('blocked-dates.unblock');
+// });
 
 /*
 |--------------------------------------------------------------------------

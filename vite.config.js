@@ -12,4 +12,23 @@ export default defineConfig({
         vue(),
         tailwindcss(),
     ],
+    build: {
+        chunkSizeWarningLimit: 1000,
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    'vendor-vue': ['vue', 'vue-router', 'vue-i18n'],
+                    'vendor-primevue': ['primevue'],
+                    'vendor-calendar': [
+                        '@fullcalendar/vue3',
+                        '@fullcalendar/core',
+                        '@fullcalendar/daygrid',
+                        '@fullcalendar/timegrid',
+                        '@fullcalendar/interaction'
+                    ],
+                    'vendor-utils': ['axios', 'chart.js']
+                }
+            }
+        }
+    }
 });

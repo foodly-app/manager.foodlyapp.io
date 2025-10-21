@@ -30,8 +30,8 @@ class ReservationService
         return $this->client->get('/api/partner/reservations', $query);
     }
 
-    /**
-     * Get calendar view of reservations
+        /**
+     * Get reservations calendar
      *
      * @param array $query
      * @return array
@@ -39,6 +39,16 @@ class ReservationService
      */
     public function calendar(array $query = []): array
     {
+        // If organization_id and restaurant_id are in query params, use the scoped endpoint
+        if (isset($query['organization_id']) && isset($query['restaurant_id'])) {
+            $orgId = $query['organization_id'];
+            $restId = $query['restaurant_id'];
+            unset($query['organization_id'], $query['restaurant_id']);
+            
+            return $this->client->get("/api/partner/organizations/{$orgId}/restaurants/{$restId}/reservations/calendar", $query);
+        }
+        
+        // Otherwise use the global endpoint
         return $this->client->get('/api/partner/reservations/calendar', $query);
     }
 

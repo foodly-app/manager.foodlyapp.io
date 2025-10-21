@@ -1,7 +1,7 @@
 <template>
     <div class="app-layout">
         <Toast />
-        
+
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
@@ -17,37 +17,29 @@
                     <i class="pi pi-home"></i>
                     <span>{{ $t('menu.dashboard') }}</span>
                 </router-link>
-                
+
                 <router-link to="/bookings" class="nav-item" active-class="active">
                     <i class="pi pi-calendar"></i>
                     <span>{{ $t('menu.bookings') }}</span>
                 </router-link>
-                
-                <router-link to="/tables" class="nav-item" active-class="active">
-                    <i class="pi pi-table"></i>
-                    <span>{{ $t('menu.tables') }}</span>
-                </router-link>
-                
-                <router-link to="/places" class="nav-item" active-class="active">
-                    <i class="pi pi-map-marker"></i>
-                    <span>{{ $t('menu.places') }}</span>
-                </router-link>
-                
+
                 <router-link to="/calendar" class="nav-item" active-class="active">
                     <i class="pi pi-calendar"></i>
                     <span>{{ $t('menu.calendar') }}</span>
                 </router-link>
-                
-                <router-link to="/menu" class="nav-item" active-class="active">
-                    <i class="pi pi-list"></i>
-                    <span>{{ $t('menu.menu') }}</span>
+
+                <router-link to="/tables" class="nav-item" active-class="active">
+                    <i class="pi pi-table"></i>
+                    <span>{{ $t('menu.tables') }}</span>
                 </router-link>
-                
-                <router-link to="/profile" class="nav-item" active-class="active">
-                    <i class="pi pi-user"></i>
-                    <span>{{ $t('common.profile') }}</span>
+
+                <router-link to="/places" class="nav-item" active-class="active">
+                    <i class="pi pi-map-marker"></i>
+                    <span>{{ $t('menu.places') }}</span>
                 </router-link>
-                
+
+
+
                 <router-link to="/settings" class="nav-item" active-class="active">
                     <i class="pi pi-cog"></i>
                     <span>{{ $t('menu.settings') }}</span>
@@ -56,14 +48,8 @@
 
             <div class="sidebar-footer">
                 <!-- Language Switcher -->
-                <Dropdown 
-                    v-model="currentLocale" 
-                    :options="locales" 
-                    optionLabel="name" 
-                    optionValue="code"
-                    @change="changeLocale"
-                    class="language-dropdown"
-                >
+                <Dropdown v-model="currentLocale" :options="locales" optionLabel="name" optionValue="code"
+                    @change="changeLocale" class="language-dropdown">
                     <template #value="slotProps">
                         <div class="flex items-center gap-2">
                             <FlagGeorgia v-if="slotProps.value === 'ka'" :width="20" :height="14" />
@@ -80,14 +66,8 @@
                     </template>
                 </Dropdown>
 
-                <Button 
-                    :label="$t('common.logout')" 
-                    icon="pi pi-sign-out" 
-                    severity="danger" 
-                    text 
-                    class="w-full"
-                    @click="handleLogout" 
-                />
+                <Button :label="$t('common.logout')" icon="pi pi-sign-out" severity="danger" text class="w-full"
+                    @click="handleLogout" />
             </div>
         </aside>
 
@@ -100,13 +80,7 @@
                 </div>
                 <div class="header-right">
                     <Button icon="pi pi-bell" severity="secondary" text rounded />
-                    <Button 
-                        icon="pi pi-user" 
-                        severity="secondary" 
-                        text 
-                        rounded 
-                        @click="router.push('/profile')"
-                    />
+                    <Button icon="pi pi-user" severity="secondary" text rounded @click="router.push('/profile')" />
                 </div>
             </header>
 
@@ -189,7 +163,7 @@ const loadUserData = async () => {
 const handleLogout = async () => {
     try {
         await axios.post('/auth/logout');
-        
+
         toast.add({
             severity: 'success',
             summary: t('common.logout'),

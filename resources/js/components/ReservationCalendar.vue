@@ -1,6 +1,6 @@
 <template>
     <div class="reservation-calendar">
-        <FullCalendar :options="calendarOptions" />
+        <FullCalendar :key="calendarKey" ref="calendar" :options="calendarOptions" />
         
         <!-- Event Details Dialog -->
         <Dialog 
@@ -99,12 +99,24 @@ const props = defineProps({
 const emit = defineEmits(['view-reservation']);
 
 // Data
-const events = ref([]);
 const loading = ref(false);
 const showEventDialog = ref(false);
 const selectedEvent = ref(null);
+const calendar = ref(null);
+const calendarKey = ref(0); // Force re-render key
 
-// Calendar Options
+const STATUS_COLORS = {
+    pending: '#facc15',
+    confirmed: '#3b82f6',
+    seated: '#8b5cf6',
+    completed: '#10b981',
+    cancelled: '#ef4444',
+    no_show: '#f97316'
+};
+
+const FALLBACK_COLOR = '#64748b';
+
+// Calendar Options - MUST be computed for reactivity
 const calendarOptions = computed(() => ({
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
     initialView: 'dayGridMonth',
@@ -120,9 +132,8 @@ const calendarOptions = computed(() => ({
         day: t('bookings.calendar.day')
     },
     locale: locale.value === 'ka' ? 'ka' : 'en',
-    events: events.value,
+    events: fetchEventsForCalendar,
     eventClick: handleEventClick,
-    datesSet: handleDatesSet,
     height: 'auto',
     eventTimeFormat: {
         hour: '2-digit',
@@ -137,57 +148,58 @@ const calendarOptions = computed(() => ({
     nowIndicator: true,
     eventDisplay: 'block',
     displayEventTime: true,
-    displayEventEnd: true
+    displayEventEnd: true,
+    editable: false,
+    selectable: false
 }));
 
 // Methods
-const fetchEvents = async (start, end) => {
-    loading.value = true;
-    
-    // Validate props
-    if (!props.organizationId || !props.restaurantId) {
-        console.error('Missing organizationId or restaurantId', props);
-        toast.add({
-            severity: 'error',
-            summary: t('common.error'),
-            detail: 'Organization or Restaurant ID is missing',
-            life: 5000
-        });
-        loading.value = false;
-        return;
-    }
-    
+const fetchEventsForCalendar = async (fetchInfo, successCallback, failureCallback) => {
     try {
+        if (!props.organizationId || !props.restaurantId) {
+            console.error('Missing org/rest IDs');
+            failureCallback();
+            return;
+        }
+
+        const start = fetchInfo.startStr.split('T')[0];
+        const end = fetchInfo.endStr.split('T')[0];
+
+        console.log('📅 Fetching calendar events:', { start, end });
+
         const response = await axios.get(
             `/organizations/${props.organizationId}/restaurants/${props.restaurantId}/reservations/calendar`,
-            {
-                params: {
-                    start: start,
-                    end: end
-                }
-            }
+            { params: { start, end } }
         );
 
-        if (response.data.success) {
-            events.value = response.data.data.events || [];
+        console.log('✅ Calendar response:', response.data);
+
+        const payload = unwrapPayload(response.data);
+
+        if (Array.isArray(payload)) {
+            const normalizedEvents = payload.map((event) => normalizeEvent(event));
+
+            console.log('📊 Events count:', normalizedEvents.length);
+            successCallback(normalizedEvents);
+        } else {
+            console.warn('❌ Calendar payload is empty');
+            failureCallback();
         }
     } catch (error) {
-        console.error('Error fetching calendar events:', error);
+        console.error('❌ Calendar fetch error:', error);
+        failureCallback();
         toast.add({
             severity: 'error',
             summary: t('common.error'),
-            detail: error.response?.data?.message || t('bookings.errors.fetchFailed'),
+            detail: error.response?.data?.message || 'Failed to load events',
             life: 5000
         });
-    } finally {
-        loading.value = false;
     }
 };
 
 const handleDatesSet = (dateInfo) => {
-    const start = dateInfo.startStr.split('T')[0];
-    const end = dateInfo.endStr.split('T')[0];
-    fetchEvents(start, end);
+    // This is not needed anymore since we use fetchEventsForCalendar
+    // but keep it for compatibility
 };
 
 const handleEventClick = (info) => {
@@ -197,19 +209,22 @@ const handleEventClick = (info) => {
 
 const viewReservation = () => {
     if (selectedEvent.value) {
-        emit('view-reservation', selectedEvent.value.extendedProps.reservation_id);
+        const reservationId = selectedEvent.value.extendedProps.reservation_id || selectedEvent.value.id;
+        emit('view-reservation', reservationId);
         showEventDialog.value = false;
     }
 };
 
 const getStatusSeverity = (status) => {
-    switch (status) {
+    const normalized = normalizeStatus(status);
+    switch (normalized) {
         case 'confirmed': return 'success';
         case 'pending': return 'warning';
         case 'completed': return 'info';
         case 'paid': return 'success';
         case 'cancelled': return 'danger';
         case 'no_show': return 'danger';
+        case 'seated': return 'info';
         default: return 'secondary';
     }
 };
@@ -222,26 +237,127 @@ const formatTime = (date) => {
     });
 };
 
+const unwrapPayload = (payload) => {
+    if (payload === null || payload === undefined) {
+        return payload;
+    }
+
+    if (Array.isArray(payload)) {
+        return payload;
+    }
+
+    if (payload?.events) {
+        return unwrapPayload(payload.events);
+    }
+
+    if (Object.prototype.hasOwnProperty.call(payload, 'data')) {
+        return unwrapPayload(payload.data);
+    }
+
+    return payload;
+};
+
+const normalizeEvent = (event) => {
+    const source = unwrapPayload(event) || {};
+    const extendedProps = source.extendedProps || {};
+    const status = normalizeStatus(extendedProps.status || source.status);
+    const color = source.backgroundColor || STATUS_COLORS[status] || FALLBACK_COLOR;
+
+    const title = source.title || buildEventTitle(source, extendedProps);
+    const start = source.start || buildEventDate(extendedProps.start || extendedProps.start_at || source.start_at);
+    const end = source.end || buildEventDate(extendedProps.end || extendedProps.end_at || source.end_at);
+
+    const reservationId = extendedProps.reservation_id || source.reservation_id || source.id;
+
+    return {
+        id: source.id || reservationId,
+        title,
+        start,
+        end,
+        backgroundColor: color,
+        borderColor: source.borderColor || color,
+        display: source.display || 'block',
+        extendedProps: {
+            ...extendedProps,
+            reservation_id: reservationId,
+            status,
+            status_label: translateStatus(status),
+            customer_name: extendedProps.customer_name || extractCustomerName(title),
+            customer_phone: extendedProps.customer_phone || '-',
+            customer_email: extendedProps.customer_email || null,
+            guests_count: extendedProps.guests_count ?? extractGuestsCount(title),
+            table_name: extendedProps.table_name || extendedProps.table_number || null,
+            place_name: extendedProps.place_name || null,
+            special_requests: extendedProps.special_requests || null
+        }
+    };
+};
+
+const normalizeStatus = (status) => {
+    return (status || '')
+        .toString()
+        .toLowerCase()
+        .replace('-', '_');
+};
+
+const translateStatus = (status) => {
+    const labels = {
+        pending: t('bookings.status.pending'),
+        confirmed: t('bookings.status.confirmed'),
+        seated: t('bookings.status.seated'),
+        completed: t('bookings.status.completed'),
+        cancelled: t('bookings.status.cancelled'),
+        no_show: t('bookings.status.no_show')
+    };
+    return labels[status] || status;
+};
+
+const buildEventTitle = (event, props) => {
+    const name = props.customer_name || props.customer || event.customer_name || '-';
+    const guests = props.guests_count || props.party_size || extractGuestsCount(event.title) || '-';
+    return `${name} - ${guests} ${t('bookings.table.guests').toLowerCase()}`;
+};
+
+const buildEventDate = (value) => {
+    if (!value) {
+        return null;
+    }
+    if (value instanceof Date) {
+        return value;
+    }
+    return new Date(value);
+};
+
+const extractCustomerName = (title) => {
+    if (!title || typeof title !== 'string') {
+        return '-';
+    }
+    const [name] = title.split(' - ');
+    return name || '-';
+};
+
+const extractGuestsCount = (title) => {
+    if (!title || typeof title !== 'string') {
+        return null;
+    }
+    const match = title.match(/(\d+)/);
+    return match ? Number(match[1]) : null;
+};
+
 // Watch locale changes
 watch(locale, () => {
-    // Force calendar to re-render with new locale
-    const currentView = calendarOptions.value.initialView;
-    calendarOptions.value.initialView = 'timeGridDay';
-    setTimeout(() => {
-        calendarOptions.value.initialView = currentView;
-    }, 0);
+    if (calendar.value) {
+        const calendarApi = calendar.value.getApi();
+        calendarApi.refetchEvents();
+    }
 });
 
-// Initial load
+// Don't need onMounted anymore - calendar will fetch automatically
 onMounted(() => {
-    const today = new Date();
-    const start = new Date(today.getFullYear(), today.getMonth(), 1);
-    const end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-    
-    fetchEvents(
-        start.toISOString().split('T')[0],
-        end.toISOString().split('T')[0]
-    );
+    console.log('🎯 ReservationCalendar mounted with IDs:', {
+        orgId: props.organizationId,
+        restId: props.restaurantId
+    });
 });
 </script>
 

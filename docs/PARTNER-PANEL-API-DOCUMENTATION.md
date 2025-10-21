@@ -1037,32 +1037,85 @@ GET /api/partner/organizations/{organization}/restaurants/{restaurant}/reservati
 
 **Query Parameters:**
 ```
-?start=2025-10-01
-&end=2025-10-31
+?start=2025-10-01         // Required: Start date (YYYY-MM-DD)
+&end=2025-10-31           // Required: End date (YYYY-MM-DD)
+&status=confirmed         // Optional: Filter by status
+&type=restaurant          // Optional: Filter by type
 ```
 
 **Success Response (200):**
 ```json
 {
   "success": true,
-  "data": [
-    {
-      "id": 100,
-      "title": "John Doe - 4 guests",
-      "start": "2025-10-25T19:00:00Z",
-      "end": "2025-10-25T21:00:00Z",
-      "backgroundColor": "#28a745",
-      "borderColor": "#28a745",
-      "extendedProps": {
-        "reservation_number": "RES-20251021-0001",
-        "customer_phone": "+995591234567",
-        "table_number": "T-01",
-        "status": "confirmed"
+  "message": "Calendar events retrieved successfully",
+  "data": {
+    "events": [
+      {
+        "id": 30,
+        "title": "John Doe - 2 persons",
+        "start": "2025-10-20T15:00:00",
+        "end": "2025-10-20T17:00:00",
+        "backgroundColor": "#28a745",
+        "borderColor": "#28a745",
+        "textColor": "#ffffff",
+        "allDay": false,
+        "extendedProps": {
+          "reservation_id": 30,
+          "customer_name": "John Doe",
+          "customer_phone": "+995598970616",
+          "customer_email": "john.doe@example.com",
+          "guests_count": 2,
+          "status": "confirmed",
+          "status_label": "Confirmed",
+          "type": "restaurant",
+          "type_label": "Restaurant",
+          "table_number": null,
+          "table_name": null,
+          "place_id": null,
+          "place_name": null,
+          "special_requests": null,
+          "notes": null,
+          "created_at": "2025-10-19T22:35:40+04:00"
+        }
       }
+    ],
+    "statistics": {
+      "total": 3,
+      "pending": 0,
+      "confirmed": 2,
+      "paid": 0,
+      "completed": 1,
+      "cancelled": 0,
+      "no_show": 0
+    },
+    "filters": {
+      "date_from": "2025-10-01",
+      "date_to": "2025-10-31",
+      "status": null,
+      "type": null
     }
-  ]
+  }
 }
 ```
+
+**Status Colors:**
+- `confirmed`: Green (#28a745)
+- `pending`: Orange (#ffc107)
+- `completed`: Blue (#007bff)
+- `paid`: Green (#28a745)
+- `cancelled`: Red (#dc3545)
+- `no_show`: Red (#dc3545)
+
+**Event Properties:**
+- `id`: Event/Reservation ID
+- `title`: Display title (format: "Customer Name - X persons")
+- `start`: ISO 8601 datetime (reservation start time)
+- `end`: ISO 8601 datetime (reservation end time)
+- `backgroundColor`: Event background color (based on status)
+- `borderColor`: Event border color (matches background)
+- `textColor`: Text color (usually white)
+- `allDay`: Boolean (false for reservations)
+- `extendedProps`: Additional reservation details for detail view
 
 ---
 

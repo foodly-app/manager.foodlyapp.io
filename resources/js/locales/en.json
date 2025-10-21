@@ -52,11 +52,18 @@
       "id": "ID",
       "customer": "Customer",
       "phone": "Phone",
+      "email": "Email",
+      "reservationNumber": "Reservation #",
       "table": "Table",
+      "place": "Place",
       "date": "Date",
       "time": "Time",
+      "duration": "Duration",
       "guests": "Guests",
-      "status": "Status"
+      "status": "Status",
+      "paymentStatus": "Payment Status",
+      "depositAmount": "Deposit",
+      "notes": "Notes"
     },
     "filters": {
       "search": "Search",
@@ -66,11 +73,17 @@
       "date": "Date",
       "selectDate": "Select date"
     },
+    "summary": {
+      "showing": "Showing {count} reservations",
+      "total": "Total: {count}"
+    },
     "status": {
       "pending": "Pending",
       "confirmed": "Confirmed",
+      "seated": "Seated",
       "completed": "Completed",
-      "cancelled": "Cancelled"
+      "cancelled": "Cancelled",
+      "no_show": "No-Show"
     },
     "actions": {
       "newBooking": "New Booking",
