@@ -93,9 +93,10 @@
                             />
                         </template>
                     </Column>
-                    <Column :header="$t('common.actions')" style="width: 200px">
+                    <Column :header="$t('common.actions')" style="width: 250px">
                         <template #body="slotProps">
                             <div class="action-buttons">
+                                <!-- View Button - Always visible -->
                                 <Button 
                                     icon="pi pi-eye" 
                                     severity="info" 
@@ -104,6 +105,8 @@
                                     v-tooltip.top="$t('common.view')"
                                     @click="viewBooking(slotProps.data)"
                                 />
+                                
+                                <!-- Confirm Button - Only for pending -->
                                 <Button 
                                     icon="pi pi-check" 
                                     severity="success" 
@@ -113,6 +116,41 @@
                                     @click="confirmBooking(slotProps.data)"
                                     v-if="slotProps.data.status === 'pending'"
                                 />
+                                
+                                <!-- Mark as Paid - For confirmed -->
+                                <Button 
+                                    icon="pi pi-dollar" 
+                                    severity="success" 
+                                    text 
+                                    rounded
+                                    v-tooltip.top="$t('bookings.actions.markAsPaid')"
+                                    @click="markAsPaid(slotProps.data)"
+                                    v-if="slotProps.data.status === 'confirmed'"
+                                />
+                                
+                                <!-- Mark as Completed - For confirmed -->
+                                <Button 
+                                    icon="pi pi-check-circle" 
+                                    severity="success" 
+                                    text 
+                                    rounded
+                                    v-tooltip.top="$t('bookings.actions.markAsCompleted')"
+                                    @click="markAsCompleted(slotProps.data)"
+                                    v-if="slotProps.data.status === 'confirmed'"
+                                />
+                                
+                                <!-- Mark as No-Show - For confirmed -->
+                                <Button 
+                                    icon="pi pi-user-minus" 
+                                    severity="warning" 
+                                    text 
+                                    rounded
+                                    v-tooltip.top="$t('bookings.actions.markAsNoShow')"
+                                    @click="markAsNoShow(slotProps.data)"
+                                    v-if="slotProps.data.status === 'confirmed'"
+                                />
+                                
+                                <!-- Cancel Button - For pending/confirmed -->
                                 <Button 
                                     icon="pi pi-times" 
                                     severity="danger" 
@@ -120,6 +158,7 @@
                                     rounded
                                     v-tooltip.top="$t('bookings.actions.cancel')"
                                     @click="cancelBooking(slotProps.data)"
+                                    v-if="['pending', 'confirmed'].includes(slotProps.data.status)"
                                 />
                             </div>
                         </template>
@@ -290,43 +329,29 @@ const applyFilters = () => {
 const fetchBookings = async () => {
     loading.value = true;
     try {
-        // Get initial dashboard to get organization/restaurant IDs
-        const dashboardResponse = await axios.get('/auth/initial-dashboard');
-        
-        if (dashboardResponse.data.success && dashboardResponse.data.data) {
-            const data = dashboardResponse.data.data;
-            const organizationId = data.organization?.id;
-            const restaurantId = data.restaurant?.id;
-
-            if (organizationId && restaurantId) {
-                // Fetch reservations from the correct endpoint
-                const response = await axios.get(
-                    `/organizations/${organizationId}/restaurants/${restaurantId}/reservations`,
-                    {
-                        headers: {
-                            'Accept': 'application/json'
-                        }
-                    }
-                );
-
-                if (response.data.success && response.data.data) {
-                    bookings.value = response.data.data.map(reservation => ({
-                        id: reservation.id,
-                        customer_name: reservation.name,
-                        phone: reservation.phone,
-                        table_name: '-', // Tables not included in response
-                        date: reservation.reservation_date,
-                        time: `${reservation.time_from} - ${reservation.time_to}`,
-                        guests: reservation.guests_count,
-                        status: reservation.status,
-                        email: reservation.email,
-                        occasion: reservation.occasion,
-                        notes: reservation.notes,
-                        type: reservation.type,
-                        created_at: reservation.created_at
-                    }));
-                }
+        // Fetch reservations directly from simplified endpoint
+        const response = await axios.get('/reservations', {
+            headers: {
+                'Accept': 'application/json'
             }
+        });
+
+        if (response.data.success && response.data.data) {
+            bookings.value = response.data.data.map(reservation => ({
+                id: reservation.id,
+                customer_name: reservation.name,
+                phone: reservation.phone,
+                table_name: '-', // Tables not included in response
+                date: reservation.reservation_date,
+                time: `${reservation.time_from} - ${reservation.time_to}`,
+                guests: reservation.guests_count,
+                status: reservation.status,
+                email: reservation.email,
+                occasion: reservation.occasion,
+                notes: reservation.notes,
+                type: reservation.type,
+                created_at: reservation.created_at
+            }));
         }
     } catch (error) {
         console.error('Failed to fetch bookings:', error);
@@ -348,7 +373,14 @@ const viewBooking = (booking) => {
 
 const confirmBooking = async (booking) => {
     try {
-        // TODO: Implement confirm API call
+        // Get organization and restaurant IDs
+        const dashboardResponse = await axios.get('/auth/initial-dashboard');
+        const data = dashboardResponse.data.data;
+        const orgId = data.organization?.id;
+        const restId = data.restaurant?.id;
+
+        await axios.post(`/organizations/${orgId}/restaurants/${restId}/reservations/${booking.id}/confirm`);
+        
         toast.add({
             severity: 'success',
             summary: t('common.success'),
@@ -370,7 +402,16 @@ const confirmBooking = async (booking) => {
 
 const cancelBooking = async (booking) => {
     try {
-        // TODO: Implement cancel API call
+        // Get organization and restaurant IDs
+        const dashboardResponse = await axios.get('/auth/initial-dashboard');
+        const data = dashboardResponse.data.data;
+        const orgId = data.organization?.id;
+        const restId = data.restaurant?.id;
+
+        await axios.post(`/organizations/${orgId}/restaurants/${restId}/reservations/${booking.id}/cancel`, {
+            reason: 'Cancelled by staff'
+        });
+        
         toast.add({
             severity: 'success',
             summary: t('common.success'),
@@ -385,6 +426,93 @@ const cancelBooking = async (booking) => {
             severity: 'error',
             summary: t('common.error'),
             detail: error.response?.data?.message || t('bookings.errors.cancelFailed'),
+            life: 5000
+        });
+    }
+};
+
+const markAsPaid = async (booking) => {
+    try {
+        // Get organization and restaurant IDs
+        const dashboardResponse = await axios.get('/auth/initial-dashboard');
+        const data = dashboardResponse.data.data;
+        const orgId = data.organization?.id;
+        const restId = data.restaurant?.id;
+
+        await axios.post(`/organizations/${orgId}/restaurants/${restId}/reservations/${booking.id}/paid`);
+        
+        toast.add({
+            severity: 'success',
+            summary: t('common.success'),
+            detail: t('bookings.messages.markedAsPaid'),
+            life: 3000
+        });
+        
+        // Refresh bookings
+        await fetchBookings();
+    } catch (error) {
+        toast.add({
+            severity: 'error',
+            summary: t('common.error'),
+            detail: error.response?.data?.message || t('bookings.errors.paidFailed'),
+            life: 5000
+        });
+    }
+};
+
+const markAsCompleted = async (booking) => {
+    try {
+        // Get organization and restaurant IDs
+        const dashboardResponse = await axios.get('/auth/initial-dashboard');
+        const data = dashboardResponse.data.data;
+        const orgId = data.organization?.id;
+        const restId = data.restaurant?.id;
+
+        await axios.post(`/organizations/${orgId}/restaurants/${restId}/reservations/${booking.id}/complete`);
+        
+        toast.add({
+            severity: 'success',
+            summary: t('common.success'),
+            detail: t('bookings.messages.markedAsCompleted'),
+            life: 3000
+        });
+        
+        // Update local status
+        booking.status = 'completed';
+    } catch (error) {
+        toast.add({
+            severity: 'error',
+            summary: t('common.error'),
+            detail: error.response?.data?.message || t('bookings.errors.completeFailed'),
+            life: 5000
+        });
+    }
+};
+
+const markAsNoShow = async (booking) => {
+    try {
+        // Get organization and restaurant IDs
+        const dashboardResponse = await axios.get('/auth/initial-dashboard');
+        const data = dashboardResponse.data.data;
+        const orgId = data.organization?.id;
+        const restId = data.restaurant?.id;
+
+        await axios.post(`/organizations/${orgId}/restaurants/${restId}/reservations/${booking.id}/no-show`);
+        
+        toast.add({
+            severity: 'success',
+            summary: t('common.success'),
+            detail: t('bookings.messages.markedAsNoShow'),
+            life: 3000
+        });
+        
+        // Update local status
+        booking.status = 'no-show';
+    } catch (error) {
+        toast.add({
+            severity: 'error',
+            summary: t('common.error'),
+            detail: error.response?.data?.message || t('bookings.errors.noShowFailed'),
             life: 5000
         });
     }

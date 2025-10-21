@@ -424,22 +424,10 @@ const getStatusSeverity = (status) => {
 const fetchTables = async () => {
     loading.value = true;
     try {
-        const dashboardResponse = await axios.get('/auth/initial-dashboard');
-        
-        if (dashboardResponse.data.success && dashboardResponse.data.data) {
-            const data = dashboardResponse.data.data;
-            const organizationId = data.organization?.id;
-            const restaurantId = data.restaurant?.id;
+        const response = await axios.get('/tables');
 
-            if (organizationId && restaurantId) {
-                const response = await axios.get(
-                    `/organizations/${organizationId}/restaurants/${restaurantId}/tables`
-                );
-
-                if (response.data.success) {
-                    tables.value = response.data.data;
-                }
-            }
+        if (response.data.success) {
+            tables.value = response.data.data;
         }
     } catch (error) {
         console.error('Failed to fetch tables:', error);

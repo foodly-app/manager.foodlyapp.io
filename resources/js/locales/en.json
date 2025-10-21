@@ -19,11 +19,15 @@
     "delete": "Delete",
     "edit": "Edit",
     "view": "View",
+    "create": "Create",
+    "update": "Update",
+    "close": "Close",
     "search": "Search",
     "filter": "Filter",
     "actions": "Actions",
     "success": "Success",
     "error": "Error",
+    "warning": "Warning",
     "name": "Name",
     "phone": "Phone",
     "language": "Language"
@@ -32,6 +36,7 @@
     "dashboard": "Dashboard",
     "bookings": "Bookings",
     "tables": "Tables",
+    "places": "Places",
     "menu": "Menu",
     "settings": "Settings"
   },
@@ -65,7 +70,10 @@
     "actions": {
       "newBooking": "New Booking",
       "confirm": "Confirm",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "markAsPaid": "Mark as Paid",
+      "markAsCompleted": "Mark as Completed",
+      "markAsNoShow": "Mark as No-Show"
     },
     "viewDialog": {
       "title": "Booking Details"
@@ -75,12 +83,18 @@
     },
     "messages": {
       "confirmed": "Booking confirmed successfully",
-      "cancelled": "Booking cancelled successfully"
+      "cancelled": "Booking cancelled successfully",
+      "markedAsPaid": "Booking marked as paid",
+      "markedAsCompleted": "Booking marked as completed",
+      "markedAsNoShow": "Booking marked as no-show"
     },
     "errors": {
       "fetchFailed": "Failed to load bookings",
       "confirmFailed": "Failed to confirm booking",
-      "cancelFailed": "Failed to cancel booking"
+      "cancelFailed": "Failed to cancel booking",
+      "paidFailed": "Failed to mark as paid",
+      "completeFailed": "Failed to mark as completed",
+      "noShowFailed": "Failed to mark as no-show"
     }
   },
   "tables": {
@@ -245,5 +259,69 @@
     "required": "This field is required",
     "minLength": "Minimum {min} characters",
     "passwordMismatch": "Passwords do not match"
+  },
+  "places": {
+    "title": "Places",
+    "subtitle": "Manage your dining areas",
+    "empty": "No places found",
+    "stats": {
+      "total": "Total Places",
+      "active": "Active",
+      "totalTables": "Total Tables",
+      "totalCapacity": "Total Capacity"
+    },
+    "columns": {
+      "id": "ID",
+      "name": "Name",
+      "description": "Description",
+      "tables": "Tables",
+      "capacity": "Capacity",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "filters": {
+      "search": "Search by name or description..."
+    },
+    "actions": {
+      "newPlace": "New Place",
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "dialog": {
+      "createTitle": "Create New Place",
+      "editTitle": "Edit Place",
+      "viewTitle": "Place Details",
+      "deleteTitle": "Delete Place",
+      "deleteMessage": "Are you sure you want to delete this place?"
+    },
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "e.g: Main Hall, Terrace, VIP Area",
+      "description": "Description",
+      "descriptionPlaceholder": "Additional information about the dining area...",
+      "capacity": "Capacity",
+      "status": "Status",
+      "selectStatus": "Select status"
+    },
+    "messages": {
+      "fetchSuccess": "Places loaded successfully",
+      "createSuccess": "Place created successfully",
+      "updateSuccess": "Place updated successfully",
+      "deleteSuccess": "Place deleted successfully"
+    },
+    "errors": {
+      "fetchFailed": "Failed to load places",
+      "createFailed": "Failed to create place",
+      "updateFailed": "Failed to update place",
+      "deleteFailed": "Failed to delete place"
+    },
+    "validation": {
+      "nameRequired": "Place name is required"
+    }
   }
 }

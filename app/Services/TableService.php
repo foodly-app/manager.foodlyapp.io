@@ -21,7 +21,7 @@ class TableService
      */
     public function list(int $organizationId, int $restaurantId, array $query = []): array
     {
-        return $this->client->get("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/tables", $query);
+        return $this->client->get("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/tables", $query);
     }
 
     /**
@@ -35,7 +35,7 @@ class TableService
      */
     public function get(int $organizationId, int $restaurantId, int $id): array
     {
-        return $this->client->get("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/tables/{$id}");
+        return $this->client->get("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/tables/{$id}");
     }
 
     /**
@@ -49,7 +49,7 @@ class TableService
      */
     public function create(int $organizationId, int $restaurantId, array $data): array
     {
-        return $this->client->post("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/tables", $data);
+        return $this->client->post("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/tables", $data);
     }
 
     /**
@@ -64,7 +64,7 @@ class TableService
      */
     public function update(int $organizationId, int $restaurantId, int $id, array $data): array
     {
-        return $this->client->put("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/tables/{$id}", $data);
+        return $this->client->put("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/tables/{$id}", $data);
     }
 
     /**
@@ -79,7 +79,7 @@ class TableService
      */
     public function updateStatus(int $organizationId, int $restaurantId, int $id, array $data): array
     {
-        return $this->client->put("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/tables/{$id}/status", $data);
+        return $this->client->put("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/tables/{$id}/status", $data);
     }
 
     /**
@@ -93,7 +93,7 @@ class TableService
      */
     public function delete(int $organizationId, int $restaurantId, int $id): array
     {
-        return $this->client->delete("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/tables/{$id}");
+        return $this->client->delete("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/tables/{$id}");
     }
 
     /**
@@ -107,7 +107,7 @@ class TableService
      */
     public function bulkUpdate(int $organizationId, int $restaurantId, array $data): array
     {
-        return $this->client->post("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/tables/bulk-update", $data);
+        return $this->client->post("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/tables/bulk-update", $data);
     }
 
     /**
@@ -122,6 +122,6 @@ class TableService
      */
     public function getAvailability(int $organizationId, int $restaurantId, int $id, array $query = []): array
     {
-        return $this->client->get("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/tables/{$id}/availability", $query);
+        return $this->client->get("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/tables/{$id}/availability", $query);
     }
 }

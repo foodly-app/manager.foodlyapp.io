@@ -22,32 +22,112 @@ Route::get('/login', function () {
     return view('login');
 })->name('login');
 
-// TEST ROUTE - without auth (must be before catch-all)
-Route::get('/test-reservations/{organizationId}/{restaurantId}', function ($organizationId, $restaurantId) {
+// Reservations API Route (must be before catch-all)
+Route::get('/reservations', function () {
     try {
-        $service = app(\App\Services\ReservationService::class);
-        $result = $service->list($organizationId, $restaurantId, []);
+        // Get initial dashboard to get organization/restaurant IDs
+        $authService = app(\App\Services\AuthService::class);
+        $dashboardData = $authService->initialDashboard();
         
-        return response()->json([
-            'test' => true,
-            'organizationId' => $organizationId,
-            'restaurantId' => $restaurantId,
-            'result' => $result
-        ]);
+        $organizationId = $dashboardData['data']['organization']['id'] ?? null;
+        $restaurantId = $dashboardData['data']['restaurant']['id'] ?? null;
+        
+        if (!$organizationId || !$restaurantId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Organization or Restaurant not found'
+            ], 404);
+        }
+        
+        // Get reservations
+        $reservationService = app(\App\Services\ReservationService::class);
+        $result = $reservationService->list($organizationId, $restaurantId, []);
+        
+        return response()->json($result);
     } catch (\Exception $e) {
         return response()->json([
-            'test' => true,
-            'error' => true,
+            'success' => false,
             'message' => $e->getMessage(),
             'trace' => $e->getTraceAsString()
         ], 500);
     }
-})->name('test.reservations');
+})->middleware('partner.auth')->name('reservations.index');
+
+// Tables API Route (must be before catch-all)
+Route::get('/tables', function () {
+    try {
+        // Get initial dashboard to get organization/restaurant IDs
+        $authService = app(\App\Services\AuthService::class);
+        $dashboardData = $authService->initialDashboard();
+        
+        $organizationId = $dashboardData['data']['organization']['id'] ?? null;
+        $restaurantId = $dashboardData['data']['restaurant']['id'] ?? null;
+        
+        if (!$organizationId || !$restaurantId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Organization or Restaurant not found'
+            ], 404);
+        }
+        
+        // Get tables
+        $tableService = app(\App\Services\TableService::class);
+        $result = $tableService->list($organizationId, $restaurantId, []);
+        
+        return response()->json($result);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ], 500);
+    }
+})->middleware('partner.auth')->name('tables.index');
+
+// Places API Route (must be before catch-all)
+Route::get('/places', function () {
+    try {
+        // Get initial dashboard to get organization/restaurant IDs
+        $authService = app(\App\Services\AuthService::class);
+        $dashboardData = $authService->initialDashboard();
+        
+        $organizationId = $dashboardData['data']['organization']['id'] ?? null;
+        $restaurantId = $dashboardData['data']['restaurant']['id'] ?? null;
+        
+        if (!$organizationId || !$restaurantId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Organization or Restaurant not found'
+            ], 404);
+        }
+        
+        // Get places
+        $placeService = app(\App\Services\PlaceService::class);
+        $result = $placeService->list($organizationId, $restaurantId, []);
+        
+        return response()->json($result);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ], 500);
+    }
+})->middleware('partner.auth')->name('places.index');
+
+// Reservation Status Actions (must be before catch-all)
+Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/reservations')->middleware('partner.auth')->group(function () {
+    Route::post('/{id}/confirm', [ReservationController::class, 'confirm'])->name('reservations.confirm');
+    Route::post('/{id}/cancel', [ReservationController::class, 'cancel'])->name('reservations.cancel');
+    Route::post('/{id}/paid', [ReservationController::class, 'markAsPaid'])->name('reservations.paid');
+    Route::post('/{id}/complete', [ReservationController::class, 'complete'])->name('reservations.complete');
+    Route::post('/{id}/no-show', [ReservationController::class, 'noShow'])->name('reservations.no-show');
+});
 
 // SPA Routes - All routes that use Vue Router should return the dashboard view
 Route::get('/{any}', function () {
     return view('dashboard');
-})->where('any', '^(?!api|auth|test-connection|test-reservations|organizations).*$')
+})->where('any', '^(?!api|auth|test-connection|organizations|reservations|tables|places).*$')
   ->middleware('partner.auth')
   ->name('spa');
 
@@ -179,14 +259,15 @@ Route::prefix('organizations/{organizationId}/restaurants')->name('restaurants.'
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/places')->name('places.')->middleware('partner.auth')->group(function () {
-    Route::get('/', [PlaceController::class, 'index'])->name('index');
-    Route::post('/', [PlaceController::class, 'store'])->name('store');
-    Route::get('/{id}', [PlaceController::class, 'show'])->name('show');
-    Route::put('/{id}', [PlaceController::class, 'update'])->name('update');
-    Route::delete('/{id}', [PlaceController::class, 'destroy'])->name('destroy');
-    Route::get('/{id}/tables', [PlaceController::class, 'tables'])->name('tables');
-});
+// Temporarily commented out - using simplified /places route instead
+// Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/places')->name('places.')->middleware('partner.auth')->group(function () {
+//     Route::get('/', [PlaceController::class, 'index'])->name('index');
+//     Route::post('/', [PlaceController::class, 'store'])->name('store');
+//     Route::get('/{id}', [PlaceController::class, 'show'])->name('show');
+//     Route::put('/{id}', [PlaceController::class, 'update'])->name('update');
+//     Route::delete('/{id}', [PlaceController::class, 'destroy'])->name('destroy');
+//     Route::get('/{id}/tables', [PlaceController::class, 'tables'])->name('tables');
+// });
 
 /*
 |--------------------------------------------------------------------------
@@ -194,61 +275,23 @@ Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/places'
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/tables')->name('tables.')->middleware('partner.auth')->group(function () {
-    Route::get('/', [TableController::class, 'index'])->name('index');
-    Route::post('/', [TableController::class, 'store'])->name('store');
-    Route::get('/{id}', [TableController::class, 'show'])->name('show');
-    Route::put('/{id}', [TableController::class, 'update'])->name('update');
-    Route::delete('/{id}', [TableController::class, 'destroy'])->name('destroy');
-
-    // Status
-    Route::put('/{id}/status', [TableController::class, 'updateStatus'])->name('status.update');
-
-    // Bulk Operations
-    Route::post('/bulk-update', [TableController::class, 'bulkUpdate'])->name('bulk-update');
-
-    // Availability
-    Route::get('/{id}/availability', [TableController::class, 'availability'])->name('availability');
-});
-
-/*
-|--------------------------------------------------------------------------
-| Reservation Routes
-|--------------------------------------------------------------------------
-*/
-
-Route::prefix('reservations')->name('reservations.')->middleware('partner.auth')->group(function () {
-    // Global Reservations
-    Route::get('/', [ReservationController::class, 'index'])->name('index');
-    Route::get('/calendar', [ReservationController::class, 'calendar'])->name('calendar');
-    Route::get('/search', [ReservationController::class, 'search'])->name('search');
-    Route::get('/statistics', [ReservationController::class, 'statistics'])->name('statistics');
-});
-
-Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/reservations')->name('reservations.restaurant.')->middleware('partner.auth')->group(function () {
-    // List reservations
-    Route::get('/', [ReservationController::class, 'index'])->name('index');
-    
-    // CRUD
-    Route::post('/', [ReservationController::class, 'store'])->name('store');
-    Route::get('/{id}', [ReservationController::class, 'show'])->name('show');
-    Route::put('/{id}', [ReservationController::class, 'update'])->name('update');
-    Route::delete('/{id}', [ReservationController::class, 'destroy'])->name('destroy');
-
-    // Status Updates
-    Route::put('/{id}/status', [ReservationController::class, 'updateStatus'])->name('status.update');
-    Route::put('/{id}/confirm', [ReservationController::class, 'confirm'])->name('confirm');
-    Route::put('/{id}/cancel', [ReservationController::class, 'cancel'])->name('cancel');
-    Route::put('/{id}/paid', [ReservationController::class, 'markAsPaid'])->name('paid');
-    Route::put('/{id}/complete', [ReservationController::class, 'complete'])->name('complete');
-    Route::put('/{id}/no-show', [ReservationController::class, 'noShow'])->name('no-show');
-
-    // Table Assignment
-    Route::put('/{id}/assign-table', [ReservationController::class, 'assignTable'])->name('assign-table');
-
-    // Notes
-    Route::post('/{id}/notes', [ReservationController::class, 'addNote'])->name('notes.add');
-});
+// Temporarily commented out - using simplified /tables route instead
+// Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/tables')->name('tables.')->middleware('partner.auth')->group(function () {
+//     Route::get('/', [TableController::class, 'index'])->name('index');
+//     Route::post('/', [TableController::class, 'store'])->name('store');
+//     Route::get('/{id}', [TableController::class, 'show'])->name('show');
+//     Route::put('/{id}', [TableController::class, 'update'])->name('update');
+//     Route::delete('/{id}', [TableController::class, 'destroy'])->name('destroy');
+// 
+//     // Status
+//     Route::put('/{id}/status', [TableController::class, 'updateStatus'])->name('status.update');
+// 
+//     // Bulk Operations
+//     Route::post('/bulk-update', [TableController::class, 'bulkUpdate'])->name('bulk-update');
+// 
+//     // Availability
+//     Route::get('/{id}/availability', [TableController::class, 'availability'])->name('availability');
+// });
 
 /*
 |--------------------------------------------------------------------------

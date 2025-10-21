@@ -19,11 +19,15 @@
     "delete": "წაშლა",
     "edit": "რედაქტირება",
     "view": "ნახვა",
+    "create": "შექმნა",
+    "update": "განახლება",
+    "close": "დახურვა",
     "search": "ძიება",
     "filter": "ფილტრი",
     "actions": "მოქმედებები",
     "success": "წარმატება",
     "error": "შეცდომა",
+    "warning": "გაფრთხილება",
     "name": "სახელი",
     "phone": "ტელეფონი",
     "language": "ენა"
@@ -32,6 +36,7 @@
     "dashboard": "მთავარი",
     "bookings": "დაჯავშნები",
     "tables": "მაგიდები",
+    "places": "ადგილები",
     "menu": "მენიუ",
     "settings": "პარამეტრები"
   },
@@ -65,7 +70,10 @@
     "actions": {
       "newBooking": "ახალი დაჯავშნა",
       "confirm": "დადასტურება",
-      "cancel": "გაუქმება"
+      "cancel": "გაუქმება",
+      "markAsPaid": "გადახდილად მონიშვნა",
+      "markAsCompleted": "დასრულებულად მონიშვნა",
+      "markAsNoShow": "No-Show-ად მონიშვნა"
     },
     "viewDialog": {
       "title": "დაჯავშნის დეტალები"
@@ -75,12 +83,18 @@
     },
     "messages": {
       "confirmed": "დაჯავშნა წარმატებით დადასტურდა",
-      "cancelled": "დაჯავშნა წარმატებით გაუქმდა"
+      "cancelled": "დაჯავშნა წარმატებით გაუქმდა",
+      "markedAsPaid": "დაჯავშნა გადახდილად მონიშნულია",
+      "markedAsCompleted": "დაჯავშნა დასრულებულად მონიშნულია",
+      "markedAsNoShow": "დაჯავშნა No-Show-ად მონიშნულია"
     },
     "errors": {
       "fetchFailed": "დაჯავშნების ჩატვირთვა ვერ მოხერხდა",
       "confirmFailed": "დადასტურება ვერ მოხერხდა",
-      "cancelFailed": "გაუქმება ვერ მოხერხდა"
+      "cancelFailed": "გაუქმება ვერ მოხერხდა",
+      "paidFailed": "გადახდილად მონიშვნა ვერ მოხერხდა",
+      "completeFailed": "დასრულებულად მონიშვნა ვერ მოხერხდა",
+      "noShowFailed": "No-Show-ად მონიშვნა ვერ მოხერხდა"
     }
   },
   "tables": {
@@ -245,5 +259,69 @@
     "required": "ეს ველი სავალდებულოა",
     "minLength": "მინიმუმ {min} სიმბოლო",
     "passwordMismatch": "პაროლები არ ემთხვევა"
+  },
+  "places": {
+    "title": "ადგილები",
+    "subtitle": "მართეთ თქვენი სასადილო ზონები",
+    "empty": "ადგილები არ მოიძებნა",
+    "stats": {
+      "total": "სულ ადგილები",
+      "active": "აქტიური",
+      "totalTables": "სულ მაგიდები",
+      "totalCapacity": "სულ ადგილები"
+    },
+    "columns": {
+      "id": "ID",
+      "name": "დასახელება",
+      "description": "აღწერა",
+      "tables": "მაგიდები",
+      "capacity": "ტევადობა",
+      "status": "სტატუსი",
+      "actions": "მოქმედებები"
+    },
+    "status": {
+      "active": "აქტიური",
+      "inactive": "არააქტიური"
+    },
+    "filters": {
+      "search": "ძებნა დასახელებით ან აღწერით..."
+    },
+    "actions": {
+      "newPlace": "ახალი ადგილი",
+      "view": "ნახვა",
+      "edit": "რედაქტირება",
+      "delete": "წაშლა"
+    },
+    "dialog": {
+      "createTitle": "ახალი ადგილის შექმნა",
+      "editTitle": "ადგილის რედაქტირება",
+      "viewTitle": "ადგილის დეტალები",
+      "deleteTitle": "ადგილის წაშლა",
+      "deleteMessage": "დარწმუნებული ხართ, რომ გსურთ ამ ადგილის წაშლა?"
+    },
+    "form": {
+      "name": "დასახელება",
+      "namePlaceholder": "მაგ: ცენტრალური დარბაზი, ტერასა, VIP ზონა",
+      "description": "აღწერა",
+      "descriptionPlaceholder": "დამატებითი ინფორმაცია სასადილო ზონის შესახებ...",
+      "capacity": "ტევადობა",
+      "status": "სტატუსი",
+      "selectStatus": "აირჩიეთ სტატუსი"
+    },
+    "messages": {
+      "fetchSuccess": "ადგილები წარმატებით ჩაიტვირთა",
+      "createSuccess": "ადგილი წარმატებით შეიქმნა",
+      "updateSuccess": "ადგილი წარმატებით განახლდა",
+      "deleteSuccess": "ადგილი წარმატებით წაიშალა"
+    },
+    "errors": {
+      "fetchFailed": "ადგილების ჩატვირთვა ვერ მოხერხდა",
+      "createFailed": "ადგილის შექმნა ვერ მოხერხდა",
+      "updateFailed": "ადგილის განახლება ვერ მოხერხდა",
+      "deleteFailed": "ადგილის წაშლა ვერ მოხერხდა"
+    },
+    "validation": {
+      "nameRequired": "ადგილის დასახელება აუცილებელია"
+    }
   }
 }

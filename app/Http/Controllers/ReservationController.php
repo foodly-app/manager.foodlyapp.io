@@ -23,17 +23,6 @@ class ReservationController extends Controller
     public function index(Request $request, int $organizationId = null, int $restaurantId = null): JsonResponse
     {
         try {
-            // Debug: Return what we received
-            return response()->json([
-                'debug' => true,
-                'message' => 'Controller reached successfully',
-                'organizationId' => $organizationId,
-                'restaurantId' => $restaurantId,
-                'query' => $request->query(),
-                'session_token' => session('partner_token') ? 'exists' : 'missing',
-                'base_url' => config('services.partner.url')
-            ]);
-            
             $reservations = $this->reservationService->list(
                 $organizationId, 
                 $restaurantId, 

@@ -39,7 +39,7 @@ class ReservationService
      */
     public function calendar(array $query = []): array
     {
-        return $this->client->get('/partner/reservations/calendar', $query);
+        return $this->client->get('/api/partner/reservations/calendar', $query);
     }
 
     /**
@@ -53,7 +53,7 @@ class ReservationService
      */
     public function get(int $organizationId, int $restaurantId, int $id): array
     {
-        return $this->client->get("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}");
+        return $this->client->get("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}");
     }
 
     /**
@@ -67,7 +67,7 @@ class ReservationService
      */
     public function create(int $organizationId, int $restaurantId, array $data): array
     {
-        return $this->client->post("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations", $data);
+        return $this->client->post("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations", $data);
     }
 
     /**
@@ -82,7 +82,7 @@ class ReservationService
      */
     public function update(int $organizationId, int $restaurantId, int $id, array $data): array
     {
-        return $this->client->put("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}", $data);
+        return $this->client->put("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}", $data);
     }
 
     /**
@@ -97,7 +97,7 @@ class ReservationService
      */
     public function updateStatus(int $organizationId, int $restaurantId, int $id, array $data): array
     {
-        return $this->client->put("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/status", $data);
+        return $this->client->put("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/status", $data);
     }
 
     /**
@@ -111,7 +111,7 @@ class ReservationService
      */
     public function confirm(int $organizationId, int $restaurantId, int $id): array
     {
-        return $this->client->put("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/confirm");
+        return $this->client->put("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/confirm");
     }
 
     /**
@@ -126,7 +126,7 @@ class ReservationService
      */
     public function cancel(int $organizationId, int $restaurantId, int $id, array $data = []): array
     {
-        return $this->client->put("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/cancel", $data);
+        return $this->client->put("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/cancel", $data);
     }
 
     /**
@@ -140,7 +140,7 @@ class ReservationService
      */
     public function markAsPaid(int $organizationId, int $restaurantId, int $id): array
     {
-        return $this->client->put("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/paid");
+        return $this->client->put("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/paid");
     }
 
     /**
@@ -154,7 +154,7 @@ class ReservationService
      */
     public function complete(int $organizationId, int $restaurantId, int $id): array
     {
-        return $this->client->put("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/complete");
+        return $this->client->put("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/complete");
     }
 
     /**
@@ -168,7 +168,7 @@ class ReservationService
      */
     public function noShow(int $organizationId, int $restaurantId, int $id): array
     {
-        return $this->client->put("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/no-show");
+        return $this->client->put("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/no-show");
     }
 
     /**
@@ -183,7 +183,7 @@ class ReservationService
      */
     public function assignTable(int $organizationId, int $restaurantId, int $id, array $data): array
     {
-        return $this->client->put("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/assign-table", $data);
+        return $this->client->put("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/assign-table", $data);
     }
 
     /**
@@ -195,7 +195,7 @@ class ReservationService
      */
     public function statistics(array $query = []): array
     {
-        return $this->client->get('/partner/reservations/statistics', $query);
+        return $this->client->get('/api/partner/reservations/statistics', $query);
     }
 
     /**
@@ -207,7 +207,7 @@ class ReservationService
      */
     public function search(array $query = []): array
     {
-        return $this->client->get('/partner/reservations/search', $query);
+        return $this->client->get('/api/partner/reservations/search', $query);
     }
 
     /**
@@ -222,7 +222,7 @@ class ReservationService
      */
     public function addNote(int $organizationId, int $restaurantId, int $id, array $data): array
     {
-        return $this->client->post("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/notes", $data);
+        return $this->client->post("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}/notes", $data);
     }
 
     /**
@@ -236,6 +236,6 @@ class ReservationService
      */
     public function delete(int $organizationId, int $restaurantId, int $id): array
     {
-        return $this->client->delete("/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}");
+        return $this->client->delete("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations/{$id}");
     }
 }
