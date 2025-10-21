@@ -44,6 +44,19 @@ class HttpClient
      */
     public function post(string $endpoint, array $data = []): array
     {
+        // Check if data contains a file for multipart upload
+        $hasFile = false;
+        foreach ($data as $value) {
+            if ($value instanceof \Illuminate\Http\UploadedFile) {
+                $hasFile = true;
+                break;
+            }
+        }
+
+        if ($hasFile) {
+            return $this->requestWithFile('post', $endpoint, $data);
+        }
+
         return $this->request('post', $endpoint, ['json' => $data]);
     }
 
@@ -84,14 +97,47 @@ class HttpClient
     private function request(string $method, string $endpoint, array $options = []): array
     {
         try {
-            $response = $this->buildRequest()
-                ->$method($this->buildUrl($endpoint), $options['json'] ?? $options['query'] ?? []);
+            $client = $this->buildRequest();
+            $url = $this->buildUrl($endpoint);
+            
+            // Handle GET requests with query parameters separately
+            if ($method === 'get' && isset($options['query'])) {
+                $response = $client->get($url, $options['query']);
+            } else {
+                // For POST, PUT, DELETE with JSON body
+                $response = $client->$method($url, $options['json'] ?? []);
+            }
 
             return $this->handleResponse($response);
         } catch (Exception $e) {
             Log::error("API request failed: {$method} {$endpoint}", [
                 'error' => $e->getMessage(),
                 'options' => $options
+            ]);
+            throw $e;
+        }
+    }
+
+    /**
+     * Make an HTTP request with file upload
+     *
+     * @param string $method
+     * @param string $endpoint
+     * @param array $data
+     * @return array
+     * @throws Exception
+     */
+    private function requestWithFile(string $method, string $endpoint, array $data = []): array
+    {
+        try {
+            $client = $this->buildRequestForFile();
+            
+            $response = $client->$method($this->buildUrl($endpoint), $data);
+
+            return $this->handleResponse($response);
+        } catch (Exception $e) {
+            Log::error("API file upload request failed: {$method} {$endpoint}", [
+                'error' => $e->getMessage()
             ]);
             throw $e;
         }
@@ -116,6 +162,29 @@ class HttpClient
             ->withHeaders([
                 'Accept' => 'application/json',
                 'Content-Type' => 'application/json'
+            ])
+            ->timeout(config('services.partner.timeout', 30));
+    }
+
+    /**
+     * Build the HTTP client request for file upload
+     *
+     * @return PendingRequest
+     */
+    private function buildRequestForFile(): PendingRequest
+    {
+        // Check if user is logged in via session (for web requests)
+        $token = session('partner_token');
+        
+        // If no session token, use the service account token (for backend tasks)
+        if (!$token) {
+            $token = $this->tokenService->getToken();
+        }
+
+        return Http::withToken($token)
+            ->withHeaders([
+                'Accept' => 'application/json'
+                // Don't set Content-Type for multipart/form-data - Laravel will set it automatically
             ])
             ->timeout(config('services.partner.timeout', 30));
     }

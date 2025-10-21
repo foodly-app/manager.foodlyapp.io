@@ -16,21 +16,37 @@ class ReservationController extends Controller
      * Get list of all reservations
      *
      * @param Request $request
+     * @param int|null $organizationId
+     * @param int|null $restaurantId
      * @return JsonResponse
      */
-    public function index(Request $request): JsonResponse
+    public function index(Request $request, int $organizationId = null, int $restaurantId = null): JsonResponse
     {
         try {
-            $reservations = $this->reservationService->list($request->query());
-
+            // Debug: Return what we received
             return response()->json([
-                'success' => true,
-                'data' => $reservations
+                'debug' => true,
+                'message' => 'Controller reached successfully',
+                'organizationId' => $organizationId,
+                'restaurantId' => $restaurantId,
+                'query' => $request->query(),
+                'session_token' => session('partner_token') ? 'exists' : 'missing',
+                'base_url' => config('services.partner.url')
             ]);
+            
+            $reservations = $this->reservationService->list(
+                $organizationId, 
+                $restaurantId, 
+                $request->query()
+            );
+
+            // Return the API response directly (it already has success and data structure)
+            return response()->json($reservations);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
             ], 500);
         }
     }

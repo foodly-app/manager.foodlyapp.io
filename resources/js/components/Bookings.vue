@@ -299,21 +299,31 @@ const fetchBookings = async () => {
             const restaurantId = data.restaurant?.id;
 
             if (organizationId && restaurantId) {
-                // Fetch reservations
+                // Fetch reservations from the correct endpoint
                 const response = await axios.get(
-                    `/organizations/${organizationId}/restaurants/${restaurantId}/reservations`
+                    `/organizations/${organizationId}/restaurants/${restaurantId}/reservations`,
+                    {
+                        headers: {
+                            'Accept': 'application/json'
+                        }
+                    }
                 );
 
-                if (response.data.success) {
+                if (response.data.success && response.data.data) {
                     bookings.value = response.data.data.map(reservation => ({
                         id: reservation.id,
-                        customer_name: reservation.name || reservation.customer_name,
-                        phone: reservation.phone || reservation.customer_phone,
-                        table_name: reservation.table?.name || reservation.table_name || '-',
-                        date: reservation.date || reservation.reservation_date,
-                        time: reservation.time || reservation.time_from,
-                        guests: reservation.guests || reservation.party_size || 0,
-                        status: reservation.status
+                        customer_name: reservation.name,
+                        phone: reservation.phone,
+                        table_name: '-', // Tables not included in response
+                        date: reservation.reservation_date,
+                        time: `${reservation.time_from} - ${reservation.time_to}`,
+                        guests: reservation.guests_count,
+                        status: reservation.status,
+                        email: reservation.email,
+                        occasion: reservation.occasion,
+                        notes: reservation.notes,
+                        type: reservation.type,
+                        created_at: reservation.created_at
                     }));
                 }
             }

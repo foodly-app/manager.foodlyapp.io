@@ -33,6 +33,11 @@
                     <span>{{ $t('menu.menu') }}</span>
                 </router-link>
                 
+                <router-link to="/profile" class="nav-item" active-class="active">
+                    <i class="pi pi-user"></i>
+                    <span>{{ $t('common.profile') }}</span>
+                </router-link>
+                
                 <router-link to="/settings" class="nav-item" active-class="active">
                     <i class="pi pi-cog"></i>
                     <span>{{ $t('menu.settings') }}</span>
@@ -85,7 +90,13 @@
                 </div>
                 <div class="header-right">
                     <Button icon="pi pi-bell" severity="secondary" text rounded />
-                    <Button icon="pi pi-user" severity="secondary" text rounded />
+                    <Button 
+                        icon="pi pi-user" 
+                        severity="secondary" 
+                        text 
+                        rounded 
+                        @click="router.push('/profile')"
+                    />
                 </div>
             </header>
 
@@ -133,6 +144,7 @@ const pageTitle = computed(() => {
         'bookings': t('menu.bookings'),
         'tables': t('menu.tables'),
         'menu': t('menu.menu'),
+        'profile': t('common.profile'),
         'settings': t('menu.settings')
     };
     return titles[route.name] || t('menu.dashboard');

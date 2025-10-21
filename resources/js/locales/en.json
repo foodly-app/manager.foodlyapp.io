@@ -23,7 +23,10 @@
     "filter": "Filter",
     "actions": "Actions",
     "success": "Success",
-    "error": "Error"
+    "error": "Error",
+    "name": "Name",
+    "phone": "Phone",
+    "language": "Language"
   },
   "menu": {
     "dashboard": "Dashboard",
@@ -207,5 +210,40 @@
       "title": "Weekly Overview",
       "bookings": "Bookings"
     }
+  },
+  "profile": {
+    "title": "My Profile",
+    "subtitle": "Manage your personal information and settings",
+    "personalInfo": "Personal Information",
+    "accountDetails": "Account Details",
+    "security": "Security",
+    "userId": "User ID",
+    "memberSince": "Member Since",
+    "organization": "Organization",
+    "status": "Status",
+    "joinedAt": "Joined At",
+    "phonePlaceholder": "+995 XXX XX XX XX",
+    "selectLanguage": "Select Language",
+    "changePassword": "Change Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "deleteAvatar": "Delete Avatar",
+    "deleteAvatarConfirm": "Are you sure you want to delete your avatar?",
+    "avatarTooLarge": "File is too large. Maximum 2MB",
+    "fetchError": "Failed to load profile",
+    "updateSuccess": "Profile updated successfully",
+    "updateError": "Failed to update profile",
+    "avatarUploadSuccess": "Avatar uploaded successfully",
+    "avatarUploadError": "Failed to upload avatar",
+    "avatarDeleteSuccess": "Avatar deleted successfully",
+    "avatarDeleteError": "Failed to delete avatar",
+    "passwordChangeSuccess": "Password changed successfully",
+    "passwordChangeError": "Failed to change password"
+  },
+  "validation": {
+    "required": "This field is required",
+    "minLength": "Minimum {min} characters",
+    "passwordMismatch": "Passwords do not match"
   }
 }

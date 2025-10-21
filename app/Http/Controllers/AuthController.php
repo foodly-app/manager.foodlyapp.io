@@ -141,10 +141,8 @@ class AuthController extends Controller
         try {
             $profile = $this->authService->getProfile();
 
-            return response()->json([
-                'success' => true,
-                'data' => $profile
-            ]);
+            // Return the API response directly (it already has success and user structure)
+            return response()->json($profile);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -165,16 +163,19 @@ class AuthController extends Controller
             $data = $request->validate([
                 'name' => ['sometimes', 'string', 'max:255'],
                 'email' => ['sometimes', 'email', 'max:255'],
-                'phone' => ['sometimes', 'string', 'max:20'],
+                'phone' => ['nullable', 'string', 'max:20'],
                 'language' => ['sometimes', 'string', 'in:ka,en'],
             ]);
 
+            // Remove empty phone field if it's empty string
+            if (isset($data['phone']) && $data['phone'] === '') {
+                $data['phone'] = null;
+            }
+
             $profile = $this->authService->updateProfile($data);
 
-            return response()->json([
-                'success' => true,
-                'data' => $profile
-            ]);
+            // Return the API response directly
+            return response()->json($profile);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -196,12 +197,10 @@ class AuthController extends Controller
                 'avatar' => ['required', 'image', 'max:2048']
             ]);
 
-            $avatar = $this->authService->uploadAvatar($request->all());
+            $avatar = $this->authService->uploadAvatar($request->file('avatar'));
 
-            return response()->json([
-                'success' => true,
-                'data' => $avatar
-            ]);
+            // Return the API response directly
+            return response()->json($avatar);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -218,12 +217,10 @@ class AuthController extends Controller
     public function deleteAvatar(): JsonResponse
     {
         try {
-            $this->authService->deleteAvatar();
+            $result = $this->authService->deleteAvatar();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Avatar deleted successfully'
-            ]);
+            // Return the API response directly
+            return response()->json($result);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -246,12 +243,10 @@ class AuthController extends Controller
                 'new_password' => ['required', 'string', 'min:8', 'confirmed'],
             ]);
 
-            $this->authService->changePassword($data);
+            $result = $this->authService->changePassword($data);
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Password changed successfully'
-            ]);
+            // Return the API response directly
+            return response()->json($result);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

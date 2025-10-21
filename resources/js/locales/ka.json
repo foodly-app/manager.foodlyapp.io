@@ -23,7 +23,10 @@
     "filter": "ფილტრი",
     "actions": "მოქმედებები",
     "success": "წარმატება",
-    "error": "შეცდომა"
+    "error": "შეცდომა",
+    "name": "სახელი",
+    "phone": "ტელეფონი",
+    "language": "ენა"
   },
   "menu": {
     "dashboard": "მთავარი",
@@ -207,5 +210,40 @@
       "title": "კვირის მიმოხილვა",
       "bookings": "დაჯავშნები"
     }
+  },
+  "profile": {
+    "title": "ჩემი პროფილი",
+    "subtitle": "მართეთ თქვენი პირადი ინფორმაცია და პარამეტრები",
+    "personalInfo": "პირადი ინფორმაცია",
+    "accountDetails": "ანგარიშის დეტალები",
+    "security": "უსაფრთხოება",
+    "userId": "მომხმარებლის ID",
+    "memberSince": "წევრობის დაწყება",
+    "organization": "ორგანიზაცია",
+    "status": "სტატუსი",
+    "joinedAt": "შეუერთდა",
+    "phonePlaceholder": "+995 XXX XX XX XX",
+    "selectLanguage": "აირჩიეთ ენა",
+    "changePassword": "პაროლის შეცვლა",
+    "currentPassword": "მიმდინარე პაროლი",
+    "newPassword": "ახალი პაროლი",
+    "confirmPassword": "დაადასტურეთ პაროლი",
+    "deleteAvatar": "ავატარის წაშლა",
+    "deleteAvatarConfirm": "დარწმუნებული ხართ, რომ გსურთ ავატარის წაშლა?",
+    "avatarTooLarge": "ფაილი ძალიან დიდია. მაქსიმუმ 2MB",
+    "fetchError": "პროფილის ჩატვირთვა ვერ მოხერხდა",
+    "updateSuccess": "პროფილი წარმატებით განახლდა",
+    "updateError": "პროფილის განახლება ვერ მოხერხდა",
+    "avatarUploadSuccess": "ავატარი წარმატებით აიტვირთა",
+    "avatarUploadError": "ავატარის ატვირთვა ვერ მოხერხდა",
+    "avatarDeleteSuccess": "ავატარი წარმატებით წაიშალა",
+    "avatarDeleteError": "ავატარის წაშლა ვერ მოხერხდა",
+    "passwordChangeSuccess": "პაროლი წარმატებით შეიცვალა",
+    "passwordChangeError": "პაროლის შეცვლა ვერ მოხერხდა"
+  },
+  "validation": {
+    "required": "ეს ველი სავალდებულოა",
+    "minLength": "მინიმუმ {min} სიმბოლო",
+    "passwordMismatch": "პაროლები არ ემთხვევა"
   }
 }

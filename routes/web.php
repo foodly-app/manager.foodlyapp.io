@@ -17,20 +17,39 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Landing Page
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
-
 // Login Page
 Route::get('/login', function () {
     return view('login');
 })->name('login');
 
-// Dashboard Route (Protected)
-Route::get('/dashboard', function () {
+// TEST ROUTE - without auth (must be before catch-all)
+Route::get('/test-reservations/{organizationId}/{restaurantId}', function ($organizationId, $restaurantId) {
+    try {
+        $service = app(\App\Services\ReservationService::class);
+        $result = $service->list($organizationId, $restaurantId, []);
+        
+        return response()->json([
+            'test' => true,
+            'organizationId' => $organizationId,
+            'restaurantId' => $restaurantId,
+            'result' => $result
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'test' => true,
+            'error' => true,
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ], 500);
+    }
+})->name('test.reservations');
+
+// SPA Routes - All routes that use Vue Router should return the dashboard view
+Route::get('/{any}', function () {
     return view('dashboard');
-})->middleware('partner.auth')->name('dashboard');
+})->where('any', '^(?!api|auth|test-connection|test-reservations|organizations).*$')
+  ->middleware('partner.auth')
+  ->name('spa');
 
 // Test Connection Route
 Route::get('/test-connection', function (TokenService $tokenService) {
@@ -207,6 +226,9 @@ Route::prefix('reservations')->name('reservations.')->middleware('partner.auth')
 });
 
 Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/reservations')->name('reservations.restaurant.')->middleware('partner.auth')->group(function () {
+    // List reservations
+    Route::get('/', [ReservationController::class, 'index'])->name('index');
+    
     // CRUD
     Route::post('/', [ReservationController::class, 'store'])->name('store');
     Route::get('/{id}', [ReservationController::class, 'show'])->name('show');

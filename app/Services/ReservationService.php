@@ -13,13 +13,21 @@ class ReservationService
     /**
      * Get list of all reservations
      *
+     * @param int|null $organizationId
+     * @param int|null $restaurantId
      * @param array $query
      * @return array
      * @throws Exception
      */
-    public function list(array $query = []): array
+    public function list(?int $organizationId = null, ?int $restaurantId = null, array $query = []): array
     {
-        return $this->client->get('/partner/reservations', $query);
+        if ($organizationId && $restaurantId) {
+            // Call Partner API endpoint
+            return $this->client->get("/api/partner/organizations/{$organizationId}/restaurants/{$restaurantId}/reservations", $query);
+        }
+        
+        // Fallback to general reservations endpoint
+        return $this->client->get('/api/partner/reservations', $query);
     }
 
     /**

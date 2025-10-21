@@ -6,31 +6,42 @@ const routes = [
         path: '/',
         name: 'dashboard',
         component: Dashboard,
-        meta: { title: 'Dashboard' }
+        meta: { title: 'Dashboard', requiresAuth: true }
     },
     {
         path: '/bookings',
         name: 'bookings',
         component: () => import('../components/Bookings.vue'),
-        meta: { title: 'Bookings' }
+        meta: { title: 'Bookings', requiresAuth: true }
     },
     {
         path: '/tables',
         name: 'tables',
         component: () => import('../components/Tables.vue'),
-        meta: { title: 'Tables' }
+        meta: { title: 'Tables', requiresAuth: true }
     },
     {
         path: '/menu',
         name: 'menu',
         component: () => import('../components/Menu.vue'),
-        meta: { title: 'Menu' }
+        meta: { title: 'Menu', requiresAuth: true }
+    },
+    {
+        path: '/profile',
+        name: 'profile',
+        component: () => import('../components/Profile.vue'),
+        meta: { title: 'Profile', requiresAuth: true }
     },
     {
         path: '/settings',
         name: 'settings',
         component: () => import('../components/Settings.vue'),
-        meta: { title: 'Settings' }
+        meta: { title: 'Settings', requiresAuth: true }
+    },
+    // 404 fallback - redirect to dashboard
+    {
+        path: '/:pathMatch(.*)*',
+        redirect: '/'
     }
 ];
 

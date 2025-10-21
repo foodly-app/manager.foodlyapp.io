@@ -87,7 +87,7 @@ class AuthService
      */
     public function uploadAvatar($avatar): array
     {
-        return $this->client->post('/api/partner/profile/avatar', [
+        return $this->client->post('/api/partner/avatar', [
             'avatar' => $avatar
         ]);
     }
@@ -100,7 +100,7 @@ class AuthService
      */
     public function deleteAvatar(): array
     {
-        return $this->client->delete('/api/partner/profile/avatar');
+        return $this->client->delete('/api/partner/avatar');
     }
 
     /**
@@ -112,6 +112,6 @@ class AuthService
      */
     public function changePassword(array $data): array
     {
-        return $this->client->put('/api/partner/profile/password', $data);
+        return $this->client->put('/api/partner/password', $data);
     }
 } 
