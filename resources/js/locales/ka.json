@@ -37,12 +37,17 @@
     "bookings": "დაჯავშნები",
     "tables": "მაგიდები",
     "places": "ადგილები",
+    "calendar": "კალენდარი",
     "menu": "მენიუ",
     "settings": "პარამეტრები"
   },
   "bookings": {
     "title": "დაჯავშნები",
     "subtitle": "მართეთ თქვენი რესტორნის დაჯავშნები",
+    "views": {
+      "list": "სია",
+      "calendar": "კალენდარი"
+    },
     "table": {
       "id": "ID",
       "customer": "სტუმარი",
@@ -95,6 +100,25 @@
       "paidFailed": "გადახდილად მონიშვნა ვერ მოხერხდა",
       "completeFailed": "დასრულებულად მონიშვნა ვერ მოხერხდა",
       "noShowFailed": "No-Show-ად მონიშვნა ვერ მოხერხდა"
+    },
+    "calendar": {
+      "title": "კალენდარი",
+      "today": "დღეს",
+      "month": "თვე",
+      "week": "კვირა",
+      "day": "დღე",
+      "eventDetails": "რეზერვაციის დეტალები",
+      "customer": "კლიენტი",
+      "phone": "ტელეფონი",
+      "email": "ელფოსტა",
+      "guests": "სტუმრები",
+      "status": "სტატუსი",
+      "time": "დრო",
+      "table": "მაგიდა",
+      "place": "ადგილი",
+      "specialRequests": "სპეციალური მოთხოვნები",
+      "viewReservation": "რეზერვაციის ნახვა",
+      "loading": "იტვირთება..."
     }
   },
   "tables": {

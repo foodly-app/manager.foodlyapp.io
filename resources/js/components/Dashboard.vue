@@ -237,6 +237,14 @@ const fetchDashboardData = async () => {
         if (response.data.success && response.data.data) {
             const data = response.data.data;
             
+            // Save organization and restaurant IDs to localStorage for other components
+            if (data.organization?.id) {
+                localStorage.setItem('organizationId', data.organization.id);
+            }
+            if (data.restaurant?.id) {
+                localStorage.setItem('restaurantId', data.restaurant.id);
+            }
+            
             // Set dashboard data
             if (data.dashboard) {
                 dashboardData.value = data.dashboard;

@@ -33,6 +33,11 @@
                     <span>{{ $t('menu.places') }}</span>
                 </router-link>
                 
+                <router-link to="/calendar" class="nav-item" active-class="active">
+                    <i class="pi pi-calendar"></i>
+                    <span>{{ $t('menu.calendar') }}</span>
+                </router-link>
+                
                 <router-link to="/menu" class="nav-item" active-class="active">
                     <i class="pi pi-list"></i>
                     <span>{{ $t('menu.menu') }}</span>

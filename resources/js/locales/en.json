@@ -37,12 +37,17 @@
     "bookings": "Bookings",
     "tables": "Tables",
     "places": "Places",
+    "calendar": "Calendar",
     "menu": "Menu",
     "settings": "Settings"
   },
   "bookings": {
     "title": "Bookings",
     "subtitle": "Manage your restaurant reservations",
+    "views": {
+      "list": "List",
+      "calendar": "Calendar"
+    },
     "table": {
       "id": "ID",
       "customer": "Customer",
@@ -95,6 +100,25 @@
       "paidFailed": "Failed to mark as paid",
       "completeFailed": "Failed to mark as completed",
       "noShowFailed": "Failed to mark as no-show"
+    },
+    "calendar": {
+      "title": "Calendar",
+      "today": "Today",
+      "month": "Month",
+      "week": "Week",
+      "day": "Day",
+      "eventDetails": "Reservation Details",
+      "customer": "Customer",
+      "phone": "Phone",
+      "email": "Email",
+      "guests": "Guests",
+      "status": "Status",
+      "time": "Time",
+      "table": "Table",
+      "place": "Place",
+      "specialRequests": "Special Requests",
+      "viewReservation": "View Reservation",
+      "loading": "Loading events..."
     }
   },
   "tables": {

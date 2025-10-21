@@ -127,7 +127,7 @@ Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/reserva
 // SPA Routes - All routes that use Vue Router should return the dashboard view
 Route::get('/{any}', function () {
     return view('dashboard');
-})->where('any', '^(?!api|auth|test-connection|organizations|reservations|tables|places).*$')
+})->where('any', '^(?!api|auth|test-connection|organizations|reservations|tables|places|calendar).*$')
   ->middleware('partner.auth')
   ->name('spa');
 

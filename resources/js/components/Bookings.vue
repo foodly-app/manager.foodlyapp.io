@@ -14,6 +14,20 @@
                 <p class="page-subtitle">{{ $t('bookings.subtitle') }}</p>
             </div>
             <div class="header-right">
+                <div class="view-toggle">
+                    <Button 
+                        :label="$t('bookings.views.list')" 
+                        icon="pi pi-list" 
+                        :severity="currentView === 'list' ? 'primary' : 'secondary'"
+                        @click="currentView = 'list'"
+                    />
+                    <Button 
+                        :label="$t('bookings.calendar.title')" 
+                        icon="pi pi-calendar" 
+                        :severity="currentView === 'calendar' ? 'primary' : 'secondary'"
+                        @click="currentView = 'calendar'"
+                    />
+                </div>
                 <Button 
                     :label="$t('bookings.actions.newBooking')" 
                     icon="pi pi-plus" 
@@ -62,8 +76,8 @@
             </template>
         </Card>
 
-        <!-- Bookings Table -->
-        <Card class="table-card">
+        <!-- List View -->
+        <Card v-if="currentView === 'list'" class="table-card">
             <template #content>
                 <DataTable 
                     :value="filteredBookings" 
@@ -167,6 +181,14 @@
             </template>
         </Card>
 
+        <!-- Calendar View -->
+        <ReservationCalendar 
+            v-if="currentView === 'calendar'"
+            :organizationId="organizationId"
+            :restaurantId="restaurantId"
+            @view-reservation="viewBookingById"
+        />
+
         <!-- View Booking Dialog -->
         <Dialog 
             v-model:visible="showViewDialog" 
@@ -233,6 +255,7 @@ import axios from 'axios';
 import Calendar from 'primevue/calendar';
 import Tag from 'primevue/tag';
 import Tooltip from 'primevue/tooltip';
+import ReservationCalendar from './ReservationCalendar.vue';
 
 const toast = useToast();
 const { t } = useI18n();
@@ -242,6 +265,24 @@ const bookings = ref([]);
 const selectedBooking = ref(null);
 const showViewDialog = ref(false);
 const showCreateDialog = ref(false);
+const currentView = ref('list'); // 'list' or 'calendar'
+
+// Get org and restaurant IDs from localStorage or fetch from API
+const organizationId = ref(null);
+const restaurantId = ref(null);
+
+// Initialize IDs from localStorage
+const initializeIds = () => {
+    const storedOrgId = localStorage.getItem('organizationId');
+    const storedRestId = localStorage.getItem('restaurantId');
+    
+    if (storedOrgId) {
+        organizationId.value = parseInt(storedOrgId, 10);
+    }
+    if (storedRestId) {
+        restaurantId.value = parseInt(storedRestId, 10);
+    }
+};
 
 const filters = ref({
     search: '',
@@ -369,6 +410,21 @@ const fetchBookings = async () => {
 const viewBooking = (booking) => {
     selectedBooking.value = booking;
     showViewDialog.value = true;
+};
+
+const viewBookingById = async (reservationId) => {
+    // Find booking in current list or fetch it
+    const booking = bookings.value.find(b => b.id === reservationId);
+    if (booking) {
+        viewBooking(booking);
+    } else {
+        // If not in current list, fetch the bookings again
+        await fetchBookings();
+        const foundBooking = bookings.value.find(b => b.id === reservationId);
+        if (foundBooking) {
+            viewBooking(foundBooking);
+        }
+    }
 };
 
 const confirmBooking = async (booking) => {
@@ -519,6 +575,7 @@ const markAsNoShow = async (booking) => {
 };
 
 onMounted(() => {
+    initializeIds();
     fetchBookings();
 });
 </script>
@@ -546,6 +603,25 @@ onMounted(() => {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
+}
+
+.header-right {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.view-toggle {
+    display: flex;
+    gap: 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 0.25rem;
+    background: #f7fafc;
+}
+
+.view-toggle .p-button {
+    border-radius: 4px;
 }
 
 .page-title {
