@@ -80,6 +80,68 @@
       "cancelFailed": "Failed to cancel booking"
     }
   },
+  "tables": {
+    "title": "Tables",
+    "subtitle": "Manage your restaurant tables",
+    "capacity": "Capacity",
+    "stats": {
+      "total": "Total Tables",
+      "available": "Available",
+      "occupied": "Occupied",
+      "totalCapacity": "Total Capacity"
+    },
+    "views": {
+      "grid": "Grid",
+      "list": "List"
+    },
+    "table": {
+      "name": "Name",
+      "capacity": "Capacity",
+      "location": "Location",
+      "status": "Status",
+      "description": "Description"
+    },
+    "filters": {
+      "search": "Search by table name...",
+      "status": "Status",
+      "allStatuses": "All Statuses"
+    },
+    "status": {
+      "available": "Available",
+      "occupied": "Occupied",
+      "reserved": "Reserved",
+      "maintenance": "Maintenance"
+    },
+    "actions": {
+      "newTable": "New Table",
+      "editTable": "Edit Table"
+    },
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "e.g: Table 1",
+      "capacity": "Capacity",
+      "location": "Location",
+      "locationPlaceholder": "e.g: Terrace, Main Hall",
+      "status": "Status",
+      "description": "Description",
+      "descriptionPlaceholder": "Additional information about the table..."
+    },
+    "deleteDialog": {
+      "title": "Delete Table",
+      "message": "Are you sure you want to delete {name}?"
+    },
+    "messages": {
+      "created": "Table created successfully",
+      "updated": "Table updated successfully",
+      "deleted": "Table deleted successfully"
+    },
+    "errors": {
+      "fetchFailed": "Failed to load tables",
+      "required": "Please fill all required fields",
+      "saveFailed": "Failed to save table",
+      "deleteFailed": "Failed to delete table"
+    }
+  },
   "login": {
     "title": "Sign In",
     "subtitle": "Welcome back!",

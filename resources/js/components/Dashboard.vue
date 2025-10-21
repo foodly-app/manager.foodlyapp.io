@@ -1,5 +1,7 @@
 <template>
     <div class="dashboard-container">
+        <Toast />
+        
         <!-- Loading Overlay -->
         <div v-if="loading" class="loading-overlay">
             <ProgressSpinner />

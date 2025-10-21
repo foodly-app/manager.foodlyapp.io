@@ -80,6 +80,68 @@
       "cancelFailed": "გაუქმება ვერ მოხერხდა"
     }
   },
+  "tables": {
+    "title": "მაგიდები",
+    "subtitle": "მართეთ თქვენი რესტორნის მაგიდები",
+    "capacity": "ადგილი",
+    "stats": {
+      "total": "სულ მაგიდები",
+      "available": "ხელმისაწვდომი",
+      "occupied": "დაკავებული",
+      "totalCapacity": "სულ ადგილები"
+    },
+    "views": {
+      "grid": "ბადე",
+      "list": "სია"
+    },
+    "table": {
+      "name": "დასახელება",
+      "capacity": "ტევადობა",
+      "location": "მდებარეობა",
+      "status": "სტატუსი",
+      "description": "აღწერა"
+    },
+    "filters": {
+      "search": "ძებნა მაგიდის დასახელებით...",
+      "status": "სტატუსი",
+      "allStatuses": "ყველა სტატუსი"
+    },
+    "status": {
+      "available": "ხელმისაწვდომი",
+      "occupied": "დაკავებული",
+      "reserved": "დარეზერვებული",
+      "maintenance": "მოვლა-პატრონობა"
+    },
+    "actions": {
+      "newTable": "ახალი მაგიდა",
+      "editTable": "მაგიდის რედაქტირება"
+    },
+    "form": {
+      "name": "დასახელება",
+      "namePlaceholder": "მაგ: მაგიდა 1",
+      "capacity": "ტევადობა",
+      "location": "მდებარეობა",
+      "locationPlaceholder": "მაგ: ტერასა, ცენტრალური დარბაზი",
+      "status": "სტატუსი",
+      "description": "აღწერა",
+      "descriptionPlaceholder": "დამატებითი ინფორმაცია მაგიდის შესახებ..."
+    },
+    "deleteDialog": {
+      "title": "მაგიდის წაშლა",
+      "message": "დარწმუნებული ხართ, რომ გსურთ {name} წაშლა?"
+    },
+    "messages": {
+      "created": "მაგიდა წარმატებით შეიქმნა",
+      "updated": "მაგიდა წარმატებით განახლდა",
+      "deleted": "მაგიდა წარმატებით წაიშალა"
+    },
+    "errors": {
+      "fetchFailed": "მაგიდების ჩატვირთვა ვერ მოხერხდა",
+      "required": "გთხოვთ შეავსოთ ყველა სავალდებულო ველი",
+      "saveFailed": "შენახვა ვერ მოხერხდა",
+      "deleteFailed": "წაშლა ვერ მოხერხდა"
+    }
+  },
   "login": {
     "title": "შესვლა",
     "subtitle": "გამარჯობა, კეთილი იყოს თქვენი დაბრუნება!",

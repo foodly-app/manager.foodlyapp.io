@@ -126,7 +126,7 @@ Route::prefix('organizations')->name('organizations.')->middleware('partner.auth
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('organizations/{organizationId}/restaurants')->name('restaurants.')->middleware('auth')->group(function () {
+Route::prefix('organizations/{organizationId}/restaurants')->name('restaurants.')->middleware('partner.auth')->group(function () {
     // CRUD
     Route::get('/', [RestaurantController::class, 'index'])->name('index');
     Route::post('/', [RestaurantController::class, 'store'])->name('store');
@@ -160,7 +160,7 @@ Route::prefix('organizations/{organizationId}/restaurants')->name('restaurants.'
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/places')->name('places.')->middleware('auth')->group(function () {
+Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/places')->name('places.')->middleware('partner.auth')->group(function () {
     Route::get('/', [PlaceController::class, 'index'])->name('index');
     Route::post('/', [PlaceController::class, 'store'])->name('store');
     Route::get('/{id}', [PlaceController::class, 'show'])->name('show');
@@ -175,7 +175,7 @@ Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/places'
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/tables')->name('tables.')->middleware('auth')->group(function () {
+Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/tables')->name('tables.')->middleware('partner.auth')->group(function () {
     Route::get('/', [TableController::class, 'index'])->name('index');
     Route::post('/', [TableController::class, 'store'])->name('store');
     Route::get('/{id}', [TableController::class, 'show'])->name('show');
@@ -198,7 +198,7 @@ Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/tables'
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('reservations')->name('reservations.')->middleware('auth')->group(function () {
+Route::prefix('reservations')->name('reservations.')->middleware('partner.auth')->group(function () {
     // Global Reservations
     Route::get('/', [ReservationController::class, 'index'])->name('index');
     Route::get('/calendar', [ReservationController::class, 'calendar'])->name('calendar');
@@ -206,7 +206,7 @@ Route::prefix('reservations')->name('reservations.')->middleware('auth')->group(
     Route::get('/statistics', [ReservationController::class, 'statistics'])->name('statistics');
 });
 
-Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/reservations')->name('reservations.restaurant.')->middleware('auth')->group(function () {
+Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/reservations')->name('reservations.restaurant.')->middleware('partner.auth')->group(function () {
     // CRUD
     Route::post('/', [ReservationController::class, 'store'])->name('store');
     Route::get('/{id}', [ReservationController::class, 'show'])->name('show');
@@ -234,7 +234,7 @@ Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/reserva
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/booking')->name('booking.')->middleware('auth')->group(function () {
+Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/booking')->name('booking.')->middleware('partner.auth')->group(function () {
     // Settings
     Route::get('/settings', [BookingController::class, 'getSettings'])->name('settings.get');
     Route::put('/settings', [BookingController::class, 'updateSettings'])->name('settings.update');
@@ -258,7 +258,7 @@ Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/booking
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/menu')->name('menu.')->middleware('auth')->group(function () {
+Route::prefix('organizations/{organizationId}/restaurants/{restaurantId}/menu')->name('menu.')->middleware('partner.auth')->group(function () {
     // Menu Overview
     Route::get('/', [MenuController::class, 'index'])->name('index');
 
