@@ -10,7 +10,7 @@
         <!-- Header with Actions -->
         <div class="page-header">
             <div class="header-left">
-                <h2 class="page-title">{{ $t('tables.title') }}</h2>
+                <!-- <h2 class="page-title">{{ $t('tables.title') }}</h2> -->
                 <p class="page-subtitle">{{ $t('tables.subtitle') }}</p>
             </div>
             <div class="header-right">
