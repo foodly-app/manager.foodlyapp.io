@@ -292,6 +292,68 @@
     "passwordChangeSuccess": "Password changed successfully",
     "passwordChangeError": "Failed to change password"
   },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Configure reservation policies and localization preferences",
+    "actions": {
+      "refresh": "Refresh",
+      "reset": "Reset changes"
+    },
+    "sections": {
+      "booking": "Reservation Preferences",
+      "limits": "Policies & Limits",
+      "localization": "Localization",
+      "meta": "Environment"
+    },
+    "fields": {
+      "reservationsEnabled": "Enable reservations",
+      "reservationsEnabledHint": "Allow guests to create new reservations for this restaurant.",
+      "onlinePaymentRequired": "Require online payment",
+      "onlinePaymentRequiredHint": "Force online payment or deposits during booking checkout.",
+      "advanceBookingDays": "Advance booking window (days)",
+      "advanceBookingDaysHint": "Maximum number of days in advance a reservation can be created.",
+      "cancellationHours": "Cancellation window (hours)",
+      "cancellationHoursHint": "Minimum hours before the start time when cancellations are allowed without penalty.",
+      "minPartySize": "Minimum party size",
+      "minPartySizeHint": "Smallest number of guests allowed per reservation.",
+      "maxPartySize": "Maximum party size",
+      "maxPartySizeHint": "Largest number of guests allowed per reservation.",
+      "timezone": "Restaurant timezone",
+      "timezonePlaceholder": "Select timezone",
+      "currency": "Default currency",
+      "currencyPlaceholder": "Select currency",
+      "language": "Preferred language"
+    },
+    "messages": {
+      "contextMissing": "We couldn't determine the active organization or restaurant. Open the dashboard to refresh the context and try again.",
+      "loadFailed": "Failed to load settings",
+      "updateSuccess": "Settings updated successfully",
+      "updateFailed": "Failed to update settings"
+    },
+    "meta": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "onlinePayments": "Online payments",
+      "bookingWindow": "Booking window",
+      "partySize": "Party size",
+      "cancellationWindow": "Cancellation window",
+      "lastUpdated": "Last updated",
+      "never": "Never"
+    },
+    "units": {
+      "days": "days",
+      "hours": "hours",
+      "guests": "guests"
+    },
+    "validation": {
+      "advanceBookingDaysMin": "Advance booking window must be at least 1 day.",
+      "cancellationHoursMin": "Cancellation window cannot be negative.",
+      "minPartySizeMin": "Minimum party size must be at least 1 guest.",
+      "maxPartySizeMin": "Maximum party size must be greater than or equal to the minimum party size.",
+      "timezoneRequired": "Please select a timezone.",
+      "currencyRequired": "Please select a currency."
+    }
+  },
   "validation": {
     "required": "This field is required",
     "minLength": "Minimum {min} characters",
