@@ -62,6 +62,7 @@
                                         v-model="filters.search" 
                                         :placeholder="$t('bookings.filters.searchPlaceholder')"
                                         @input="applyFilters"
+                                        class="enhanced-input"
                                     />
                                 </div>
                             </div>
@@ -76,6 +77,7 @@
                                     :placeholder="$t('bookings.filters.allStatuses')"
                                     @change="applyFilters"
                                     showClear
+                                    class="enhanced-dropdown"
                                 />
                             </div>
                             
@@ -87,8 +89,10 @@
                                     :placeholder="$t('bookings.filters.selectDate')"
                                     @date-select="applyFilters"
                                     showButtonBar
+                                    class="enhanced-calendar"
                                 />
                             </div>
+
                         </div>
                     </template>
                 </Card>
@@ -97,11 +101,37 @@
                 <Card v-if="currentView === 'list'" class="table-card">
                     <template #header>
                         <div class="table-card-header">
-                            <div>
-                                <h3>{{ $t('bookings.views.list') }}</h3>
-                                <p>{{ $t('bookings.summary.showing', { count: filteredBookings.length }) }}</p>
+                            <div class="header-content">
+                                <div class="header-title-section">
+                                    <div class="title-icon">
+                                        <i class="pi pi-list"></i>
+                                    </div>
+                                    <div class="title-text">
+                                        <h3>{{ $t('bookings.views.list') }}</h3>
+                                        <p class="subtitle">{{ $t('bookings.summary.showing', { count: filteredBookings.length }) }}</p>
+                                    </div>
+                                </div>
+                                <div class="header-stats">
+                                    <div class="stat-item">
+                                        <div class="stat-icon">
+                                            <i class="pi pi-calendar"></i>
+                                        </div>
+                                        <div class="stat-content">
+                                            <span class="stat-label">{{ $t('bookings.summary.total') }}</span>
+                                            <span class="stat-value">{{ bookings.length }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="stat-item" v-if="filteredBookings.length !== bookings.length">
+                                        <div class="stat-icon filtered">
+                                            <i class="pi pi-filter"></i>
+                                        </div>
+                                        <div class="stat-content">
+                                            <span class="stat-label">{{ $t('bookings.summary.filtered') }}</span>
+                                            <span class="stat-value">{{ filteredBookings.length }}</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <Tag :value="$t('bookings.summary.total', { count: bookings.length })" severity="info" />
                         </div>
                     </template>
                     <template #content>
@@ -115,23 +145,68 @@
                             showGridlines
                             class="elevated-table"
                         >
-                            <Column field="id" :header="$t('bookings.table.id')" sortable style="width: 80px"></Column>
-                            <Column field="customer_name" :header="$t('bookings.table.customer')" sortable></Column>
-                            <Column field="phone" :header="$t('bookings.table.phone')"></Column>
-                            <Column field="table_name" :header="$t('bookings.table.table')" sortable></Column>
-                            <Column field="date" :header="$t('bookings.table.date')" sortable>
+                            <Column field="id" :header="$t('bookings.table.id')" sortable style="width: 80px">
                                 <template #body="slotProps">
-                                    {{ formatDate(slotProps.data.date) }}
+                                    <div class="booking-id">
+                                        <i class="pi pi-hashtag"></i>
+                                        <span>{{ slotProps.data.id }}</span>
+                                    </div>
                                 </template>
                             </Column>
-                            <Column field="time" :header="$t('bookings.table.time')" sortable></Column>
-                            <Column field="guests" :header="$t('bookings.table.guests')" sortable style="width: 100px"></Column>
+                            <Column field="customer_name" :header="$t('bookings.table.customer')" sortable>
+                                <template #body="slotProps">
+                                    <div class="customer-info">
+                                        <div class="customer-avatar">
+                                            <i class="pi pi-user"></i>
+                                        </div>
+                                        <div class="customer-details">
+                                            <div class="customer-name">{{ slotProps.data.customer_name }}</div>
+                                            <div class="customer-phone">{{ slotProps.data.phone }}</div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </Column>
+                            <Column field="table_name" :header="$t('bookings.table.table')" sortable style="width: 120px">
+                                <template #body="slotProps">
+                                    <div class="table-info">
+                                        <i class="pi pi-table"></i>
+                                        <span>{{ slotProps.data.table_name || '-' }}</span>
+                                    </div>
+                                </template>
+                            </Column>
+                            <Column field="date" :header="$t('bookings.table.date')" sortable style="width: 140px">
+                                <template #body="slotProps">
+                                    <div class="date-time-info">
+                                        <div class="date-display">
+                                            <i class="pi pi-calendar"></i>
+                                            <span>{{ formatDate(slotProps.data.date) }}</span>
+                                        </div>
+                                        <div class="time-display">
+                                            <i class="pi pi-clock"></i>
+                                            <span>{{ slotProps.data.time }}</span>
+                                        </div>
+                                    </div>
+                                </template>
+                            </Column>
+                            <Column field="guests" :header="$t('bookings.table.guests')" sortable style="width: 100px">
+                                <template #body="slotProps">
+                                    <div class="guests-info">
+                                        <i class="pi pi-users"></i>
+                                        <span>{{ slotProps.data.guests }}</span>
+                                    </div>
+                                </template>
+                            </Column>
                             <Column field="status" :header="$t('bookings.table.status')" sortable style="width: 150px">
                                 <template #body="slotProps">
-                                    <Tag 
-                                        :value="translateStatus(slotProps.data.status)" 
-                                        :severity="getStatusSeverity(slotProps.data.status)"
-                                    />
+                                    <div class="status-container">
+                                        <Tag 
+                                            :value="translateStatus(slotProps.data.status)" 
+                                            :severity="getStatusSeverity(slotProps.data.status)"
+                                            :icon="getStatusIcon(slotProps.data.status)"
+                                            :data-status="slotProps.data.status"
+                                            class="status-tag"
+                                        />
+                                    </div>
                                 </template>
                             </Column>
                             <Column :header="$t('common.actions')" style="width: 250px">
@@ -250,15 +325,17 @@
                     <span class="detail-label">{{ $t('bookings.table.guests') }}:</span>
                     <span class="detail-value">{{ selectedBooking.guests }}</span>
                 </div>
-                <div class="detail-row">
+                <!-- <div class="detail-row">
                     <span class="detail-label">{{ $t('bookings.table.table') }}:</span>
                     <span class="detail-value">{{ selectedBooking.table_name }}</span>
-                </div>
+                </div> -->
                 <div class="detail-row">
                     <span class="detail-label">{{ $t('bookings.table.status') }}:</span>
                     <Tag 
                         :value="translateStatus(selectedBooking.status)" 
                         :severity="getStatusSeverity(selectedBooking.status)"
+                        :data-status="selectedBooking.status"
+                        class="status-tag"
                     />
                 </div>
             </div>
@@ -324,7 +401,9 @@ const statusOptions = computed(() => [
     { label: t('bookings.status.confirmed'), value: 'confirmed' },
     { label: t('bookings.status.completed'), value: 'completed' },
     { label: t('bookings.status.cancelled'), value: 'cancelled' }
+    // Note: 'paid' status is temporarily hidden
 ]);
+
 
 const statusCounts = computed(() => {
     const counts = {
@@ -335,7 +414,10 @@ const statusCounts = computed(() => {
         no_show: 0
     };
 
-    bookings.value.forEach((booking) => {
+    // Filter out paid status bookings from counts
+    const visibleBookings = bookings.value.filter(b => b.status !== 'paid');
+
+    visibleBookings.forEach((booking) => {
         const key = (booking.status || '').toLowerCase().replace('-', '_');
         if (counts[key] !== undefined) {
             counts[key] += 1;
@@ -381,6 +463,9 @@ const statusPills = computed(() => [
 const filteredBookings = computed(() => {
     let result = bookings.value;
 
+    // Hide paid status bookings temporarily
+    result = result.filter(b => b.status !== 'paid');
+
     // Search filter
     if (filters.value.search) {
         const searchLower = filters.value.search.toLowerCase();
@@ -420,9 +505,21 @@ const getStatusSeverity = (status) => {
         'pending': 'warning',
         'confirmed': 'success',
         'completed': 'info',
-        'cancelled': 'danger'
+        'cancelled': 'danger',
+        'no-show': 'danger'
     };
     return severityMap[status?.toLowerCase()] || 'secondary';
+};
+
+const getStatusIcon = (status) => {
+    const iconMap = {
+        'pending': 'pi pi-clock',
+        'confirmed': 'pi pi-check-circle',
+        'completed': 'pi pi-check',
+        'cancelled': 'pi pi-times',
+        'no-show': 'pi pi-user-minus'
+    };
+    return iconMap[status?.toLowerCase()] || 'pi pi-circle';
 };
 
 const formatDate = (dateString) => {
@@ -463,7 +560,7 @@ const fetchBookings = async () => {
                 id: reservation.id,
                 customer_name: reservation.name,
                 phone: reservation.phone,
-                table_name: '-', // Tables not included in response
+                table_name: reservation.table_name || reservation.table_number || '-',
                 date: reservation.reservation_date,
                 time: `${reservation.time_from} - ${reservation.time_to}`,
                 guests: reservation.guests_count,
@@ -827,7 +924,11 @@ onMounted(() => {
 .filters-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
 }
 
 .input-wrapper {
@@ -857,23 +958,181 @@ onMounted(() => {
     font-size: 0.875rem;
 }
 
+/* Enhanced Filter Components */
+.enhanced-input {
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+}
+
+.enhanced-input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    outline: none;
+}
+
+.enhanced-dropdown {
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.enhanced-dropdown:focus-within {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.enhanced-calendar {
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.enhanced-calendar:focus-within {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* Enhanced Input Wrapper */
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper i {
+    position: absolute;
+    left: 0.75rem;
+    color: #94a3b8;
+    font-size: 0.9rem;
+    z-index: 1;
+}
+
 .table-card-header {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-radius: 16px 16px 0 0;
+    padding: 1.5rem 2rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 0;
+    gap: 2rem;
 }
 
-.table-card-header h3 {
-    margin: 0;
+.header-title-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.title-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
     font-size: 1.25rem;
-    color: #1e293b;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
-.table-card-header p {
+.title-text h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.2;
+}
+
+.title-text .subtitle {
     margin: 0.25rem 0 0;
     color: #64748b;
     font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.header-stats {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: white;
+    padding: 0.75rem 1rem;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stat-icon {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.9rem;
+}
+
+.stat-icon.filtered {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.stat-value {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .header-stats {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .stat-item {
+        flex: 1;
+        justify-content: center;
+    }
 }
 
 .elevated-table {
@@ -890,6 +1149,257 @@ onMounted(() => {
 .action-buttons {
     display: flex;
     gap: 0.25rem;
+}
+
+/* Enhanced Table Styling */
+.booking-id {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #6366f1;
+}
+
+.booking-id i {
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
+.customer-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.customer-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.customer-details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.customer-name {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.9rem;
+}
+
+.customer-phone {
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+.table-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    color: #475569;
+}
+
+.table-info i {
+    color: #6366f1;
+    font-size: 0.9rem;
+}
+
+.date-time-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.date-display, .time-display {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.date-display {
+    color: #1e293b;
+    font-weight: 500;
+}
+
+.time-display {
+    color: #64748b;
+}
+
+.date-display i, .time-display i {
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
+.guests-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    justify-content: center;
+    background: #f1f5f9;
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.guests-info i {
+    color: #6366f1;
+    font-size: 0.9rem;
+}
+
+.status-container {
+    display: flex;
+    justify-content: center;
+}
+
+.status-tag {
+    font-weight: 600;
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Custom Status Colors */
+:deep(.p-tag.p-tag-success) {
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 2px 4px rgba(34, 197, 94, 0.3) !important;
+}
+
+:deep(.p-tag.p-tag-warning) {
+    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3) !important;
+}
+
+:deep(.p-tag.p-tag-info) {
+    background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3) !important;
+}
+
+:deep(.p-tag.p-tag-danger) {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3) !important;
+}
+
+/* Status-specific styling for better distinction */
+:deep(.p-tag[data-status="pending"]) {
+    background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+    color: white !important;
+}
+
+:deep(.p-tag[data-status="confirmed"]) {
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    color: white !important;
+}
+
+:deep(.p-tag[data-status="completed"]) {
+    background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+    color: white !important;
+}
+
+:deep(.p-tag[data-status="cancelled"]) {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    color: white !important;
+}
+
+/* Enhanced DataTable Styling */
+:deep(.p-datatable) {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.1);
+}
+
+:deep(.p-datatable .p-datatable-header) {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border-bottom: 2px solid #e2e8f0;
+    padding: 1.5rem;
+}
+
+:deep(.p-datatable .p-datatable-thead > tr > th) {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.8rem;
+    padding: 1rem 0.75rem;
+    border: none;
+}
+
+:deep(.p-datatable .p-datatable-tbody > tr) {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+:deep(.p-datatable .p-datatable-tbody > tr:hover) {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+}
+
+:deep(.p-datatable .p-datatable-tbody > tr > td) {
+    padding: 1.25rem 0.75rem;
+    border: none;
+    vertical-align: middle;
+}
+
+:deep(.p-datatable .p-datatable-tbody > tr:nth-child(even)) {
+    background: rgba(248, 250, 252, 0.5);
+}
+
+/* Enhanced Action Buttons */
+.action-buttons .p-button {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.action-buttons .p-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.action-buttons .p-button.p-button-success {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border: none;
+}
+
+.action-buttons .p-button.p-button-info {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border: none;
+}
+
+.action-buttons .p-button.p-button-warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    border: none;
+}
+
+.action-buttons .p-button.p-button-danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    border: none;
 }
 
 .booking-details {

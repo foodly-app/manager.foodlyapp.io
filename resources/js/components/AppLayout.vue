@@ -28,15 +28,15 @@
                     <span>{{ $t('menu.calendar') }}</span>
                 </router-link>
 
-                <router-link to="/tables" class="nav-item" active-class="active">
+                <!-- <router-link to="/tables" class="nav-item" active-class="active">
                     <i class="pi pi-table"></i>
                     <span>{{ $t('menu.tables') }}</span>
-                </router-link>
+                </router-link> -->
 
-                <router-link to="/places" class="nav-item" active-class="active">
+                <!-- <router-link to="/places" class="nav-item" active-class="active">
                     <i class="pi pi-map-marker"></i>
                     <span>{{ $t('menu.places') }}</span>
-                </router-link>
+                </router-link> -->
 
 
 
