@@ -123,4 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'partner_api_url' => env('PARTNER_API_URL', 'https://api.foodlyapp.io/api'),
+
 ];
