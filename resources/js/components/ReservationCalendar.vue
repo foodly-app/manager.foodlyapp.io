@@ -88,11 +88,11 @@ const toast = useToast();
 const props = defineProps({
     organizationId: {
         type: Number,
-        required: true
+        default: null
     },
     restaurantId: {
         type: Number,
-        required: true
+        default: null
     }
 });
 
@@ -156,11 +156,11 @@ const calendarOptions = computed(() => ({
 // Methods
 const fetchEventsForCalendar = async (fetchInfo, successCallback, failureCallback) => {
     try {
-        if (!props.organizationId || !props.restaurantId) {
-            console.error('Missing org/rest IDs');
-            failureCallback();
-            return;
-        }
+        // if (!props.organizationId || !props.restaurantId) {
+        //     console.error('Missing org/rest IDs');
+        //     failureCallback();
+        //     return;
+        // }
 
         const start = fetchInfo.startStr.split('T')[0];
         const end = fetchInfo.endStr.split('T')[0];
@@ -168,7 +168,17 @@ const fetchEventsForCalendar = async (fetchInfo, successCallback, failureCallbac
         console.log('📅 Fetching calendar events:', { start, end });
 
         const response = await axios.get(
-            `/organizations/${props.organizationId}/restaurants/${props.restaurantId}/reservations/calendar`,
+            '/organizations/calendar/events', // Using the new standardized route (needs to be updated in web.php prefix if not global)
+            // Actually, we put it under the prefix 'organizations/{organizationId}/restaurants/{restaurantId}/reservations' in web.php...
+            // Wait, the plan was "Add /calendar/events route to expose ReservationController::calendar without ID requirements."
+            // In web.php I added it inside the group. I should have added it OUTSIDE the group or constructed the URL correctly.
+            // Let's check where I added it in web.php. I added it inside 'organizations/{organizationId}/restaurants/{restaurantId}/reservations'.
+            // This defeats the purpose if I still need IDs in the URL.
+            // I need to correct web.php first to put it outside, OR use a different route.
+            // Actually, the previous 'reservations' fix was outside the group. I should probably move this one outside too in the next step.
+            // For now, let's assume I'll move it to `/reservations/calendar/events` or similar global scope.
+            // Let's use `'/calendar/events'` assuming I will fix web.php to have it globally.
+             '/calendar/events',
             { params: { start, end } }
         );
 

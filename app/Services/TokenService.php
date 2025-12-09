@@ -43,7 +43,7 @@ class TokenService
     {
         try {
             $baseUrl = config('services.partner.url');
-            
+
             $response = Http::withoutVerifying()
                 ->withHeaders([
                     'Accept' => 'application/json',
@@ -55,15 +55,15 @@ class TokenService
                 ]);
 
             if ($response->successful()) {
-                $token = $response->json('token');
-                
+                $token = $response->json('data.token');
+
                 // ვინახავთ ტოკენს ვადის ინფორმაციასთან ერთად
                 $expiresAt = now()->addDays(7)->timestamp; // ტოკენი 7 დღე ვალიდურია
                 $this->storage->save($token, $expiresAt);
-                
-                return $token;
-            }            throw new Exception('Failed to generate token: ' . $response->body());
 
+                return $token;
+            }
+            throw new Exception('Failed to generate token: ' . $response->body());
         } catch (Exception $e) {
             Log::error('Token generation failed: ' . $e->getMessage());
             throw $e;

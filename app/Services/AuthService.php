@@ -4,6 +4,8 @@ namespace App\Services;
 
 use Exception;
 
+use Illuminate\Support\Facades\Http;
+
 class AuthService
 {
     public function __construct(
@@ -19,7 +21,22 @@ class AuthService
      */
     public function login(array $credentials): array
     {
-        return $this->client->post('/api/partner/login', $credentials);
+        $baseUrl = config('services.partner.url');
+        $url = rtrim($baseUrl, '/') . '/api/partner/login';
+
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
+        ])->post($url, $credentials);
+
+        if ($response->successful()) {
+            return $response->json();
+        }
+
+        $body = $response->json();
+        $message = $body['message'] ?? 'Login failed';
+
+        throw new Exception($message);
     }
 
     /**
@@ -41,7 +58,7 @@ class AuthService
      */
     public function initialDashboard(): array
     {
-        return $this->client->get('/api/partner/initial-dashboard');
+        return $this->client->get('/api/partner/dashboard');
     }
 
     /**
@@ -114,4 +131,4 @@ class AuthService
     {
         return $this->client->put('/api/partner/password', $data);
     }
-} 
+}

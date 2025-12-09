@@ -34,22 +34,22 @@ class AuthController extends Controller
             Log::info('Login result:', $result);
 
             // Store token in session for subsequent requests
-            if (isset($result['token'])) {
-                session(['partner_token' => $result['token']]);
-                session(['partner_user' => $result['user']]);
+            if (isset($result['data']['token'])) {
+                session(['partner_token' => $result['data']['token']]);
+                session(['partner_user' => $result['data']['user']]);
             }
 
             return response()->json([
                 'success' => true,
-                'token' => $result['token'] ?? null,
-                'user' => $result['user'] ?? null
+                'token' => $result['data']['token'] ?? null,
+                'user' => $result['data']['user'] ?? null
             ]);
         } catch (\Exception $e) {
             Log::error('Login failed:', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()
@@ -67,10 +67,7 @@ class AuthController extends Controller
         try {
             $user = $this->authService->me();
 
-            return response()->json([
-                'success' => true,
-                'data' => $user
-            ]);
+            return response()->json($user);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -103,7 +100,7 @@ class AuthController extends Controller
         } catch (\Exception $e) {
             // Even if API logout fails, clear local session
             session()->forget(['partner_token', 'partner_user']);
-            
+
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage()

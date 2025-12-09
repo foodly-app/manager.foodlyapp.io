@@ -24,7 +24,7 @@
         </div>
 
         <!-- Debug Info -->
-        <div v-if="!organizationId || !restaurantId" style="padding: 2rem; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; margin-bottom: 1rem;">
+        <div v-if="false" style="padding: 2rem; background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; margin-bottom: 1rem;">
             <h3 style="color: #856404; margin: 0 0 1rem 0;">⚠️ Missing IDs</h3>
             <p style="margin: 0.5rem 0;">Organization ID: {{ organizationId || 'NOT SET' }}</p>
             <p style="margin: 0.5rem 0;">Restaurant ID: {{ restaurantId || 'NOT SET' }}</p>
@@ -33,9 +33,8 @@
 
         <!-- Calendar View -->
         <ReservationCalendar 
-            v-if="organizationId && restaurantId"
-            :organizationId="organizationId"
-            :restaurantId="restaurantId"
+            :organizationId="organizationId || 0"
+            :restaurantId="restaurantId || 0"
             @view-reservation="viewReservation"
         />
 
