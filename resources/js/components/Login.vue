@@ -204,9 +204,6 @@ const handleLogin = async () => {
     errorMessage.value = '';
 
     try {
-        // Get CSRF token first
-        await axios.get('/sanctum/csrf-cookie');
-
         // Make login request
         const response = await axios.post('/auth/login', {
             email: form.email,
@@ -224,9 +221,12 @@ const handleLogin = async () => {
                 life: 2000
             });
 
-            // Store user data if needed
+            // Store user data and token
             if (response.data.user) {
                 localStorage.setItem('user', JSON.stringify(response.data.user));
+            }
+            if (response.data.token) {
+                localStorage.setItem('token', response.data.token);
             }
 
             // Redirect to dashboard

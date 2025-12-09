@@ -229,26 +229,41 @@ const getStatusClass = (status) => {
 const fetchDashboardData = async () => {
     loading.value = true;
     try {
-        // Get initial dashboard data (includes user, organization, restaurant, dashboard)
-        const response = await axios.get('/auth/initial-dashboard');
+        const token = localStorage.getItem('token');
         
-        console.log('Initial dashboard response:', response.data);
+        // Get dashboard data from Partner API
+        const response = await axios.get('/api/partner/dashboard', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        console.log('Dashboard response:', response.data);
         
         if (response.data.success && response.data.data) {
             const data = response.data.data;
             
-            // Save organization and restaurant IDs to localStorage for other components
-            if (data.organization?.id) {
-                localStorage.setItem('organizationId', data.organization.id);
-            }
+            // Save restaurant info to localStorage
             if (data.restaurant?.id) {
                 localStorage.setItem('restaurantId', data.restaurant.id);
+                localStorage.setItem('restaurantName', data.restaurant.name);
             }
             
-            // Set dashboard data
-            if (data.dashboard) {
-                dashboardData.value = data.dashboard;
-            }
+            // Set dashboard data from KPIs
+            dashboardData.value = {
+                today_stats: {
+                    total_reservations: data.dashboard.kpis.today_reservations,
+                    pending: data.dashboard.kpis.pending
+                },
+                tables: {
+                    active: data.dashboard.kpis.tables_active,
+                    total: data.dashboard.kpis.tables_total
+                },
+                places: {
+                    total: 0
+                },
+                kpis: data.dashboard.kpis
+            };
             
             console.log('Dashboard data:', dashboardData.value);
         } else {
